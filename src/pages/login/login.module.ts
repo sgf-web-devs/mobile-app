@@ -1,5 +1,5 @@
 import {NgModule} from '@angular/core';
-import {IonicPageModule, NavController, Platform} from 'ionic-angular';
+import {IonicPageModule} from 'ionic-angular';
 import {LoginPage} from './login';
 
 @NgModule({
