@@ -42,18 +42,6 @@
                 </ion-row>
             </ion-grid>
         </ion-item>
-        <attendee-list-item></attendee-list-item>
-        <attendee-list-item></attendee-list-item>
-        <attendee-list-item></attendee-list-item>
-        <attendee-list-item></attendee-list-item>
-        <attendee-list-item></attendee-list-item>
-        <attendee-list-item></attendee-list-item>
-        <attendee-list-item></attendee-list-item>
-        <attendee-list-item></attendee-list-item>
-        <attendee-list-item></attendee-list-item>
-        <attendee-list-item></attendee-list-item>
-        <attendee-list-item></attendee-list-item>
-        <attendee-list-item></attendee-list-item>
-        <attendee-list-item></attendee-list-item>
+            <attendee-list-item *ngFor="let attendee of attendees" [attendee]="attendee"></attendee-list-item>
     </ion-list>
 </ion-content>
