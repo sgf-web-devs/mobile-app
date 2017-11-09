@@ -1,10 +1,8 @@
 import { NgModule } from '@angular/core';
 import { AttendeeListItemComponent } from './attendee-list-item/attendee-list-item';
 @NgModule({
-	declarations: [AttendeeListItemComponent,
-    AttendeeListItemComponent],
+	declarations: [AttendeeListItemComponent],
 	imports: [],
-	exports: [AttendeeListItemComponent,
-    AttendeeListItemComponent]
+	exports: [AttendeeListItemComponent]
 })
 export class ComponentsModule {}

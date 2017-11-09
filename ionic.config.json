@@ -1,8 +1,6 @@
 {
-  "name": "sgfWebDevs",
-  "app_id": "37afdcd4",
+  "name": "sgfMobileApp",
+  "app_id": "",
   "type": "ionic-angular",
-  "integrations": {
-    "cordova": {}
-  }
+  "integrations": {}
 }
