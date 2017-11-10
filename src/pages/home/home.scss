@@ -1,8 +1,6 @@
 page-home {
-	
-	.event-info {
-		background-color: #D4E4E6;
 
+	.event-info {
 		h3, p {
 			color: #333;
 		}
@@ -12,7 +10,7 @@ page-home {
 		}
 
 		.date {
-			color: #71A7AD;
+			color: map-get($colors, primary);
 			font-weight: bold;
 		}
 
