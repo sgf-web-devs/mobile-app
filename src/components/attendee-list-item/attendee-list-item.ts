@@ -1,5 +1,4 @@
-import { Component } from '@angular/core';
-
+import { Component, Input } from '@angular/core';
 /**
  * Generated class for the AttendeeListItemComponent component.
  *
@@ -12,16 +11,8 @@ import { Component } from '@angular/core';
 })
 export class AttendeeListItemComponent {
 
-  name: string;
-  description: string;
-  checkInTime: string;
-  profileImg: string;
+  @Input() attendee: any;
 
-  constructor() {
-    this.name = 'Myke Bates';
-    this.description = 'Full Stack Dev'
-    this.checkInTime = '1m';
-    this.profileImg = 'assets/imgs/profile.jpg'
-  }
+  constructor() { }
 
 }

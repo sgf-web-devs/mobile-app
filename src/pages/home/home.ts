@@ -1,14 +1,26 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NavController } from 'ionic-angular';
+
+import { CheckInPage } from './../check-in/check-in';
+import { AttendeeProvider } from './../../providers/attendee/attendee';
 
 @Component({
     selector: 'page-home',
     templateUrl: 'home.html'
 })
-export class HomePage {
+export class HomePage implements OnInit {
+    attendees: any;
 
-    constructor(public navCtrl: NavController) {
+    checkIn = CheckInPage
 
+    constructor(
+        public navCtrl: NavController,
+        private attendeeProvier: AttendeeProvider
+    ) { }
+
+    ngOnInit() {
+        this.attendeeProvier.getAttendees().subscribe(
+            attendees => this.attendees = attendees,
+        );
     }
-
 }
