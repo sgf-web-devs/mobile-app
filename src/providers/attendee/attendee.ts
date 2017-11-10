@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-
+import { of } from 'rxjs/observable/of';
 /*
   Generated class for the AttendeeProvider provider.
 
@@ -34,7 +34,7 @@ export class AttendeeProvider {
     }
 
     getAttendees() {
-        return this.attendees;
+        return of( this.attendees );
     }
 
 }

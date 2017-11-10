@@ -17,6 +17,8 @@ export class HomePage implements OnInit {
     ) { }
 
     ngOnInit() {
-        this.attendees = this.attendeeProvier.getAttendees();
+        this.attendeeProvier.getAttendees().subscribe(
+            attendees => this.attendees = attendees,
+        );
     }
 }
