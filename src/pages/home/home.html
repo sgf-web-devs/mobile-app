@@ -1,25 +1,10 @@
 <ion-content>
-    <ion-fab bottom right>
-        <button ion-fab color="secondary">
-            <ion-icon name="add"></ion-icon>
-        </button>
-    </ion-fab>
     <ion-list scrollY="true" no-lines>
         <ion-item class="user">
             <ion-avatar item-start>
                 <img src="assets/imgs/profile.jpg">
             </ion-avatar>
-            <ion-grid>
-                <ion-row>
-                    <ion-col col-10>
-                        <h2>Hola, Brad</h2>
-                        <p>We're glad you're here.</p>
-                    </ion-col>
-                    <ion-col col-2>
-                        <ion-icon ios="ios-arrow-forward" md="md-arrow-forward"></ion-icon>
-                    </ion-col>
-                </ion-row>
-            </ion-grid>
+            <button ion-button block outline color="light" [navPush]="checkIn">Check in</button>
         </ion-item>
         <ion-item class="event-info">
             <ion-avatar item-start>
@@ -42,6 +27,6 @@
                 </ion-row>
             </ion-grid>
         </ion-item>
-            <attendee-list-item *ngFor="let attendee of attendees" [attendee]="attendee"></attendee-list-item>
+        <attendee-list-item *ngFor="let attendee of attendees" [attendee]="attendee"></attendee-list-item>
     </ion-list>
 </ion-content>
