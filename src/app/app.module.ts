@@ -7,6 +7,7 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
 import { LoginPage } from "../pages/login/login";
+import { CheckInPage } from './../pages/check-in/check-in';
 import { AttendeeListItemComponent } from "../components/attendee-list-item/attendee-list-item";
 import { AttendeeProvider } from '../providers/attendee/attendee';
 
@@ -15,6 +16,7 @@ import { AttendeeProvider } from '../providers/attendee/attendee';
         MyApp,
         HomePage,
         LoginPage,
+        CheckInPage,
         AttendeeListItemComponent
     ],
     imports: [
@@ -25,7 +27,8 @@ import { AttendeeProvider } from '../providers/attendee/attendee';
     entryComponents: [
         MyApp,
         HomePage,
-        LoginPage
+        LoginPage,
+        CheckInPage
     ],
     providers: [
         StatusBar,

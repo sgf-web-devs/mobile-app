@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NavController } from 'ionic-angular';
 
+import { CheckInPage } from './../check-in/check-in';
 import { AttendeeProvider } from './../../providers/attendee/attendee';
 
 @Component({
@@ -8,8 +9,9 @@ import { AttendeeProvider } from './../../providers/attendee/attendee';
     templateUrl: 'home.html'
 })
 export class HomePage implements OnInit {
-
     attendees: any;
+
+    checkIn = CheckInPage
 
     constructor(
         public navCtrl: NavController,
