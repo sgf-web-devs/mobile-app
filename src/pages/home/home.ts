@@ -1,29 +1,22 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NavController } from 'ionic-angular';
+
+import { AttendeeProvider } from './../../providers/attendee/attendee';
 
 @Component({
     selector: 'page-home',
     templateUrl: 'home.html'
 })
-export class HomePage {
+export class HomePage implements OnInit {
 
-    attendees = [
-        {
-            name: 'Myke Bates',
-            description: 'Full Stack Dev',
-            checkInTime: '1m',
-            profileImg: 'assets/imgs/profile.jpg'
-        },
-        {
-            name: 'Levi Zitting',
-            description: 'Front End Dev',
-            checkInTime: '4m',
-            profileImg: 'assets/imgs/profile.jpg'
-        }
-    ]
+    attendees: any;
 
-    constructor(public navCtrl: NavController) {
+    constructor(
+        public navCtrl: NavController,
+        private attendeeProvier: AttendeeProvider
+    ) { }
 
+    ngOnInit() {
+        this.attendees = this.attendeeProvier.getAttendees();
     }
-
 }

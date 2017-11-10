@@ -8,6 +8,7 @@ import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
 import { LoginPage } from "../pages/login/login";
 import { AttendeeListItemComponent } from "../components/attendee-list-item/attendee-list-item";
+import { AttendeeProvider } from '../providers/attendee/attendee';
 
 @NgModule({
     declarations: [
@@ -29,7 +30,8 @@ import { AttendeeListItemComponent } from "../components/attendee-list-item/atte
     providers: [
         StatusBar,
         SplashScreen,
-        {provide: ErrorHandler, useClass: IonicErrorHandler}
+        {provide: ErrorHandler, useClass: IonicErrorHandler},
+    AttendeeProvider
     ]
 })
 export class AppModule {
