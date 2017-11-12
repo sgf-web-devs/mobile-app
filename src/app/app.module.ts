@@ -10,6 +10,7 @@ import { LoginPage } from "../pages/login/login";
 import { CheckInPage } from './../pages/check-in/check-in';
 import { AttendeeListItemComponent } from "../components/attendee-list-item/attendee-list-item";
 import { AttendeeProvider } from '../providers/attendee/attendee';
+import { PreCheckinPage } from '../pages/pre-checkin/pre-checkin';
 
 @NgModule({
     declarations: [
@@ -17,6 +18,7 @@ import { AttendeeProvider } from '../providers/attendee/attendee';
         HomePage,
         LoginPage,
         CheckInPage,
+        PreCheckinPage,
         AttendeeListItemComponent
     ],
     imports: [
@@ -28,7 +30,8 @@ import { AttendeeProvider } from '../providers/attendee/attendee';
         MyApp,
         HomePage,
         LoginPage,
-        CheckInPage
+        CheckInPage,
+        PreCheckinPage
     ],
     providers: [
         StatusBar,
