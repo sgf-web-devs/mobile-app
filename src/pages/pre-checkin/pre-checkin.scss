@@ -3,4 +3,10 @@ page-pre-checkin {
         color: map-get($colors, primary);
         font-weight: bold;
     }
+    .grey-text{
+        color: map-get($colors, grey-text);
+    }
+    hr{
+       border-color: map-get($colors , grey-text);
+    }
 }

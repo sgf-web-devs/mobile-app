@@ -25,11 +25,10 @@ export class HomePage implements OnInit {
         );
     }
     showCheckIn(){
-        //TODO if (within time constraints){
-            //this.navCtrl.push(CheckInPage);
-        //}else{
-            console.log("hit");
-            this.navCtrl.push(PreCheckinPage);
-        //}
+        //TODO if within time constraints
+        //this.navCtrl.push(CheckInPage);
+        //else
+        this.navCtrl.push(PreCheckinPage);
+
     }
 }
