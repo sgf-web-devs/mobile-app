@@ -1,4 +1,10 @@
 page-pre-checkin {
+    h3{
+        margin: 0;
+    }
+    .pad-top{
+        padding-top: 1em;
+    }
     .primary {
         color: map-get($colors, primary);
         font-weight: bold;
