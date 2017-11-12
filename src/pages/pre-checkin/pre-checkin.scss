@@ -1,3 +1,6 @@
 page-pre-checkin {
-
+    .primary {
+        color: map-get($colors, primary);
+        font-weight: bold;
+    }
 }
