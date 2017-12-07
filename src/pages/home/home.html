@@ -1,4 +1,11 @@
+
 <ion-content>
+    <ul>
+        <li *ngFor="let item of items | async">
+            {{ item.firstName }}
+        </li>
+    </ul>
+    <h1 *ngIf="auth.user">{{auth.user.displayName}}</h1>
     <ion-list scrollY="true" no-lines>
         <ion-item class="user" color="grey-dark">
             <ion-avatar item-start>
@@ -8,7 +15,7 @@
         </ion-item>
         <ion-item class="event-info" color="primary-light">
             <ion-avatar item-start>
-                <img src="assets/imgs/profile.jpg">
+                <img src="assets/imgs/logo-small.png">
             </ion-avatar>
             <ion-grid>
                 <ion-row>

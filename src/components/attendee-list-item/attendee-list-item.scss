@@ -1,5 +1,5 @@
 attendee-list-item {
-	ion-row {
-		align-items: center;
+	ion-item.item.item-block.item-md {
+		border-bottom: 1px solid map-get($colors, gray-light);
 	}
 }

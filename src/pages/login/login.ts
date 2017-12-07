@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
+
 import { HomePage } from "../home/home";
+import {AuthenticationProvider} from "../../providers/authentication/authentication";
 
 /**
  * Generated class for the LoginPage page.
@@ -14,21 +16,33 @@ import { HomePage } from "../home/home";
     selector: 'page-login',
     templateUrl: 'login.html',
 })
-export class LoginPage {
+export class LoginPage implements OnInit {
+    loginChange: any;
 
-    constructor(public navCtrl: NavController, public navParams: NavParams) {
+
+    constructor(public navCtrl: NavController, public navParams: NavParams, private auth: AuthenticationProvider) {
+    }
+
+    ngOnInit(){
+        this.loginChange = this.auth.getLoginChangeEmitter()
+            .subscribe(user => this.onLoginChange(user));
+    }
+
+    onLoginChange(user:any){
+        if(user){
+            console.log(JSON.stringify(this.auth.user.displayName));
+            this.navCtrl.setRoot(HomePage).then(() =>{});
+
+        }
     }
 
     ionViewDidLoad() {
         console.log('ionViewDidLoad LoginPage');
     }
 
-    doLogin() {
-        this.navCtrl.setRoot(HomePage).then(() =>{
-            // Just mocking this up for now.
-            // Need to actually auth and all of that good stuff
-            // Myke
-        });
+    login(){
+        this.auth.login();
     }
+
 
 }
