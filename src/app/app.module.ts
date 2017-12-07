@@ -14,6 +14,8 @@ import { CheckInPage } from './../pages/check-in/check-in';
 import { AttendeeListItemComponent } from "../components/attendee-list-item/attendee-list-item";
 import { AttendeeProvider } from '../providers/attendee/attendee';
 import { PreCheckinPage } from '../pages/pre-checkin/pre-checkin';
+import { AuthenticationProvider } from '../providers/authentication/authentication';
+import {HttpClientModule} from "@angular/common/http";
 
 @NgModule({
     declarations: [
@@ -26,6 +28,7 @@ import { PreCheckinPage } from '../pages/pre-checkin/pre-checkin';
     ],
     imports: [
         BrowserModule,
+        HttpClientModule,
         AngularFireModule.initializeApp(environment.firebase, 'sgf-web-devs-api'),
         AngularFireAuthModule,
         IonicModule.forRoot(MyApp)
@@ -42,7 +45,8 @@ import { PreCheckinPage } from '../pages/pre-checkin/pre-checkin';
         StatusBar,
         SplashScreen,
         {provide: ErrorHandler, useClass: IonicErrorHandler},
-    AttendeeProvider
+    AttendeeProvider,
+    AuthenticationProvider
     ]
 })
 export class AppModule {
