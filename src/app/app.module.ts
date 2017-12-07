@@ -8,6 +8,7 @@ import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
 import { LoginPage } from "../pages/login/login";
 import { CheckInPage } from './../pages/check-in/check-in';
+import { Geolocation } from '@ionic-native/geolocation';
 import { AttendeeListItemComponent } from "../components/attendee-list-item/attendee-list-item";
 import { AttendeeProvider } from '../providers/attendee/attendee';
 import { PreCheckinPage } from '../pages/pre-checkin/pre-checkin';
@@ -36,6 +37,7 @@ import { PreCheckinPage } from '../pages/pre-checkin/pre-checkin';
     providers: [
         StatusBar,
         SplashScreen,
+        Geolocation,
         {provide: ErrorHandler, useClass: IonicErrorHandler},
     AttendeeProvider
     ]

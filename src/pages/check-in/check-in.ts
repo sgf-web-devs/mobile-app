@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import {Component, ElementRef, ViewChild} from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { Geolocation } from '@ionic-native/geolocation';
 
 /**
  * Generated class for the CheckInPage page.
@@ -8,6 +9,8 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
  * Ionic pages and navigation.
  */
 
+declare var google;
+
 @IonicPage()
 @Component({
   selector: 'page-check-in',
@@ -15,11 +18,44 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 })
 export class CheckInPage {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+    @ViewChild('map') mapElement: ElementRef;
+    map: any;
+
+    constructor(public navCtrl: NavController, public navParams: NavParams, public geolocation: Geolocation) {
   }
+
+
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad CheckInPage');
+    this.loadMap();
   }
+
+    loadMap(){
+
+        this.geolocation.getCurrentPosition().then((position) => {
+
+            let latLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+
+            let mapOptions = {
+                center: latLng,
+                zoom: 15,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            }
+
+            this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
+
+            new google.maps.Marker({
+                map: this.map,
+                animation: google.maps.Animation.DROP,
+                position: this.map.getCenter()
+            });
+
+        }, (err) => {
+            console.log(err);
+        });
+    }
+
+
 
 }
