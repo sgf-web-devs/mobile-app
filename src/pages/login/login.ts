@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { AngularFireAuth } from 'angularfire2/auth';
+import * as firebase from 'firebase/app';
 import { HomePage } from "../home/home";
 
 /**
@@ -16,19 +18,30 @@ import { HomePage } from "../home/home";
 })
 export class LoginPage {
 
-    constructor(public navCtrl: NavController, public navParams: NavParams) {
+    constructor(public navCtrl: NavController, public navParams: NavParams, public afAuth: AngularFireAuth) {
     }
 
     ionViewDidLoad() {
         console.log('ionViewDidLoad LoginPage');
     }
 
-    doLogin() {
-        this.navCtrl.setRoot(HomePage).then(() =>{
-            // Just mocking this up for now.
-            // Need to actually auth and all of that good stuff
-            // Myke
+    login() {
+        var provider = new firebase.auth.GithubAuthProvider();
+        provider.addScope('read:user');
+        var _self = this;
+        this.afAuth.auth.signInWithPopup(provider).then(function(result) {
+            console.log(result);
+            // This gives you a GitHub Access Token.
+            var token = result.credential.accessToken;
+            // The signed-in user info.
+            var user = result.user;
+
+            _self.navCtrl.setRoot(HomePage).then(() =>{});
         });
+    }
+
+    logout() {
+        this.afAuth.auth.signOut();
     }
 
 }

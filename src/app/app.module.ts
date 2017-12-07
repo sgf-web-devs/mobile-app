@@ -3,6 +3,9 @@ import { ErrorHandler, NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
+import { AngularFireModule } from 'angularfire2';
+import { AngularFireAuthModule } from 'angularfire2/auth';
+import { environment } from '../environments/environment';
 
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
@@ -23,6 +26,8 @@ import { PreCheckinPage } from '../pages/pre-checkin/pre-checkin';
     ],
     imports: [
         BrowserModule,
+        AngularFireModule.initializeApp(environment.firebase, 'sgf-web-devs-api'),
+        AngularFireAuthModule,
         IonicModule.forRoot(MyApp)
     ],
     bootstrap: [IonicApp],
