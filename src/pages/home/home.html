@@ -1,5 +1,6 @@
-<ion-content>
 
+<ion-content>
+    <h1 *ngIf="auth.user">{{auth.user.displayName}}</h1>
     <ion-list scrollY="true" no-lines>
         <ion-item class="user" color="grey-dark">
             <ion-avatar item-start>

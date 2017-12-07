@@ -5,6 +5,7 @@ import { NavController } from 'ionic-angular';
 import { CheckInPage } from './../check-in/check-in';
 import { AttendeeProvider } from './../../providers/attendee/attendee';
 import { PreCheckinPage } from '../pre-checkin/pre-checkin';
+import {AuthenticationProvider} from "../../providers/authentication/authentication";
 
 @Component({
     selector: 'page-home',
@@ -17,7 +18,8 @@ export class HomePage implements OnInit {
 
     constructor(
         public navCtrl: NavController,
-        private attendeeProvier: AttendeeProvider
+        private attendeeProvier: AttendeeProvider,
+        public auth: AuthenticationProvider
     ) { }
 
 
