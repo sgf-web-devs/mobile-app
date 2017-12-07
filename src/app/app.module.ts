@@ -5,6 +5,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
 import { AngularFireModule } from 'angularfire2';
 import { AngularFireAuthModule } from 'angularfire2/auth';
+import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { environment } from '../environments/environment';
 
 import { MyApp } from './app.component';
@@ -15,7 +16,7 @@ import { AttendeeListItemComponent } from "../components/attendee-list-item/atte
 import { AttendeeProvider } from '../providers/attendee/attendee';
 import { PreCheckinPage } from '../pages/pre-checkin/pre-checkin';
 import { AuthenticationProvider } from '../providers/authentication/authentication';
-import {HttpClientModule} from "@angular/common/http";
+import { HttpClientModule } from "@angular/common/http";
 
 @NgModule({
     declarations: [
@@ -31,6 +32,7 @@ import {HttpClientModule} from "@angular/common/http";
         HttpClientModule,
         AngularFireModule.initializeApp(environment.firebase, 'sgf-web-devs-api'),
         AngularFireAuthModule,
+        AngularFireDatabaseModule,
         IonicModule.forRoot(MyApp)
     ],
     bootstrap: [IonicApp],

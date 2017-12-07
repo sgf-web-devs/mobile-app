@@ -1,5 +1,10 @@
 
 <ion-content>
+    <ul>
+        <li *ngFor="let item of items | async">
+            {{ item.firstName }}
+        </li>
+    </ul>
     <h1 *ngIf="auth.user">{{auth.user.displayName}}</h1>
     <ion-list scrollY="true" no-lines>
         <ion-item class="user" color="grey-dark">
