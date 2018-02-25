@@ -1,5 +1,10 @@
 page-home {
 	.item-md {
+        h1 {
+            font-weight: bold;
+            font-size: 18px;
+            color: #FFFFFF;
+        }
 		h2 {
 			color: map-get($colors, primary);
 			font-weight: bold;
@@ -8,6 +13,10 @@ page-home {
 		p {
 			color: black;
 		}
+
+        .description p {
+            margin-bottom: 1em;
+        }
 	}
 
 	.event-info {

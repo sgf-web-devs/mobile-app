@@ -31,8 +31,8 @@ export class LoginPage implements OnInit {
     onLoginChange(user:any){
         if(user){
             console.log(JSON.stringify(this.auth.user.displayName));
-            this.navCtrl.setRoot(HomePage).then(() =>{});
-
+            //this.navCtrl.setRoot(HomePage).then(() =>{});
+            this.navCtrl.push(HomePage);
         }
     }
 

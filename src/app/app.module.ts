@@ -18,6 +18,8 @@ import { AttendeeProvider } from '../providers/attendee/attendee';
 import { PreCheckinPage } from '../pages/pre-checkin/pre-checkin';
 import { AuthenticationProvider } from '../providers/authentication/authentication';
 import { HttpClientModule } from "@angular/common/http";
+import { JsonpModule } from '@angular/http';
+import { IonicStorageModule } from '@ionic/storage';
 
 @NgModule({
     declarations: [
@@ -31,10 +33,12 @@ import { HttpClientModule } from "@angular/common/http";
     imports: [
         BrowserModule,
         HttpClientModule,
+        JsonpModule,
         AngularFireModule.initializeApp(environment.firebase, 'sgf-web-devs-api'),
         AngularFireAuthModule,
         AngularFireDatabaseModule,
-        IonicModule.forRoot(MyApp)
+        IonicModule.forRoot(MyApp),
+        IonicStorageModule.forRoot()
     ],
     bootstrap: [IonicApp],
     entryComponents: [
