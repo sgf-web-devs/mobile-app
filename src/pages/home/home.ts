@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import {NavController, Platform} from 'ionic-angular';
 import { CheckInPage } from './../check-in/check-in';
 import { AttendeeProvider } from './../../providers/attendee/attendee';
 import { PreCheckinPage } from '../pre-checkin/pre-checkin';
@@ -28,13 +28,15 @@ export class HomePage implements OnInit {
         private db: AngularFireDatabase,
         private http:HttpClient,
         private jsonp: Jsonp,
-        private storage: Storage
+        private storage: Storage,
+        public plt: Platform
     ) {
         this.checkedIn = false;
         this.items = db.list('user').valueChanges();
 
         this.getLatestMeetup();
         this.checkCheckIn();
+        this.initPushNotifications();
     }
 
 
@@ -114,7 +116,8 @@ export class HomePage implements OnInit {
             })
         };
 
-        return this.http.post('http://sgf-web-devs-staging.glitchedmob.com/api/checkin', { 'value1': 'yep' }, httpOptions).map((res: Response) => res);
+        return this.http.post('http://demo9029555.mockable.io/checkin', { 'value1': 'yep' }, httpOptions).map((res: Response) => res);
+        //return this.http.post('http://sgf-web-devs-staging.glitchedmob.com/api/checkin', { 'value1': 'yep' }, httpOptions).map((res: Response) => res);
     }
 
     allowedToCheckin() {
@@ -155,5 +158,25 @@ export class HomePage implements OnInit {
     today() {
         let today = new Date();
         return today.getMonth() + '/' + today.getDay() + '/' + today.getFullYear();
+    }
+
+    initPushNotifications() {
+        let notificationOpenedCallback = function(jsonData) {
+            alert('notificationOpenedCallback: ' + JSON.stringify(jsonData));
+        };
+
+        if(this.plt.is('android')) {
+            window["plugins"].OneSignal
+                .startInit("0b60a144-1ecf-4903-8c16-76bec9905e8f", "673684652707")
+                .handleNotificationOpened(notificationOpenedCallback)
+                .endInit();
+        }
+
+        if(this.plt.is('ios')) {
+            window["plugins"].OneSignal
+                .startInit("0b60a144-1ecf-4903-8c16-76bec9905e8f")
+                .handleNotificationOpened(notificationOpenedCallback)
+                .endInit();
+        }
     }
 }

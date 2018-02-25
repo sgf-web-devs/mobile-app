@@ -9,13 +9,10 @@
             <h1 *ngIf="auth.user">{{ auth.user.displayName }}</h1>
             <button ion-button block outline color="light" (click)="checkIn()" *ngIf="allowedToCheckin()">Check in</button>
             <button ion-button block outline color="light" (click)="openNextEventInBrowser(latestMeetup.link)" *ngIf="showRsvpLink()">RSVP For The Next Meetup</button>
-            <h3 *ngIf="checkedIn">You are checked in. Grab some pizza and enjoy the night!</h3>
+            <h3 *ngIf="checkedIn" text-wrap>You are checked in. Grab some pizza and enjoy the night!</h3>
         </ion-item>
 
         <ion-item class="event-info" color="primary-light" *ngIf="latestMeetup">
-            <ion-avatar item-start>
-                <img src="assets/imgs/logo-small.png">
-            </ion-avatar>
             <ion-grid>
                 <ion-row>
                     <ion-col col-10>
