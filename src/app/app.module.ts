@@ -20,6 +20,7 @@ import { AuthenticationProvider } from '../providers/authentication/authenticati
 import { HttpClientModule } from "@angular/common/http";
 import { JsonpModule } from '@angular/http';
 import { IonicStorageModule } from '@ionic/storage';
+import { InAppBrowser } from "@ionic-native/in-app-browser";
 
 @NgModule({
     declarations: [
@@ -52,9 +53,10 @@ import { IonicStorageModule } from '@ionic/storage';
         StatusBar,
         SplashScreen,
         Geolocation,
+        InAppBrowser,
         {provide: ErrorHandler, useClass: IonicErrorHandler},
-    AttendeeProvider,
-    AuthenticationProvider
+        AttendeeProvider,
+        AuthenticationProvider
     ]
 })
 export class AppModule {

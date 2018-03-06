@@ -2,8 +2,9 @@ import {Component, OnInit} from '@angular/core';
 import {IonicPage, NavController, NavParams, Platform} from 'ionic-angular';
 
 import { HomePage } from "../home/home";
-import {AuthenticationProvider} from "../../providers/authentication/authentication";
+import { AuthenticationProvider } from "../../providers/authentication/authentication";
 import { Storage } from '@ionic/storage';
+import { InAppBrowser } from "@ionic-native/in-app-browser";
 
 /**
  * Generated class for the LoginPage page.
@@ -21,7 +22,14 @@ export class LoginPage implements OnInit {
     loginChange: any;
 
 
-    constructor(public navCtrl: NavController, public navParams: NavParams, private auth: AuthenticationProvider, public plt: Platform, public storage: Storage) {
+    constructor(
+        public navCtrl: NavController,
+        public navParams: NavParams,
+        private auth: AuthenticationProvider,
+        public plt: Platform,
+        public storage: Storage,
+        public iab: InAppBrowser
+    ) {
 
     }
 
@@ -51,11 +59,18 @@ export class LoginPage implements OnInit {
     login(){
         //this.auth.login();
 
+        const client_id = 'mabrcd406k0hhhe6gms84lfaq0';
+        const redirect_url = 'http://sgf-web-devs-staging.glitchedmob.com/api/meetup-oauth';
+
+        const browser = this.iab.create(`https://secure.meetup.com/oauth2/authorize?client_id=${client_id}&response_type=code&redirect_uri=${redirect_url}`);
+        // browser.on('exit').subscribe(event => console.log(event));
+
+
         // This needs to happen after actually authenticating
-        this.storage.set('user', 'true');
-        this.storage.set('user_name', 'Myke Bates');
-        this.storage.set('user_email', 'contact@mykebates.com');
-        this.storage.set('user_image', 'https://s.gravatar.com/avatar/772eaa7ff6cd8dc6fb1b1f27b6bad71d?s=500');
-        this.navCtrl.setRoot(HomePage).then(() =>{});
+        // this.storage.set('user', 'true');
+        // this.storage.set('user_name', 'Myke Bates');
+        // this.storage.set('user_email', 'contact@mykebates.com');
+        // this.storage.set('user_image', 'https://s.gravatar.com/avatar/772eaa7ff6cd8dc6fb1b1f27b6bad71d?s=500');
+        // this.navCtrl.setRoot(HomePage).then(() =>{});
     }
 }
