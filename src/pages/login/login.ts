@@ -1,10 +1,11 @@
 import {Component, OnInit} from '@angular/core';
-import {IonicPage, NavController, NavParams, Platform} from 'ionic-angular';
+import {IonicPage, NavController, NavParams, Platform, LoadingController} from 'ionic-angular';
 
 import { HomePage } from "../home/home";
 import { AuthenticationProvider } from "../../providers/authentication/authentication";
 import { Storage } from '@ionic/storage';
-import { InAppBrowser } from "@ionic-native/in-app-browser";
+import { Meetup } from "../../providers/authentication/meetup";
+
 
 /**
  * Generated class for the LoginPage page.
@@ -28,7 +29,7 @@ export class LoginPage implements OnInit {
         private auth: AuthenticationProvider,
         public plt: Platform,
         public storage: Storage,
-        public iab: InAppBrowser
+        public meetup: Meetup,
     ) {
 
     }
@@ -57,12 +58,18 @@ export class LoginPage implements OnInit {
     }
 
     login(){
+        this.meetup.login().then((success) => {
+            this.navCtrl.setRoot(HomePage);
+        }, (err) => {
+            console.log(err);
+        })
+
         //this.auth.login();
 
-        const client_id = 'mabrcd406k0hhhe6gms84lfaq0';
-        const redirect_url = 'http://sgf-web-devs-staging.glitchedmob.com/api/meetup-oauth';
-
-        const browser = this.iab.create(`https://secure.meetup.com/oauth2/authorize?client_id=${client_id}&response_type=code&redirect_uri=${redirect_url}`);
+        // const client_id = 'mabrcd406k0hhhe6gms84lfaq0';
+        // const redirect_url = 'http://sgf-web-devs-staging.glitchedmob.com/api/meetup-oauth';
+        //
+        // const browser = this.iab.create(`https://secure.meetup.com/oauth2/authorize?client_id=${client_id}&response_type=code&redirect_uri=${redirect_url}`);
         // browser.on('exit').subscribe(event => console.log(event));
 
 
