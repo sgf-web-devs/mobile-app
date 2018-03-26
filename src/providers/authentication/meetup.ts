@@ -3,11 +3,11 @@ import { Http, Headers } from "@angular/http";
 import { InAppBrowser } from "@ionic-native/in-app-browser";
 import { Observable } from "rxjs/Observable";
 import 'rxjs/add/operator/map';
-import {listener} from "@angular/core/src/render3/instructions";
+//import 'rxjs/add/operator/toPromise';
+//import 'rxjs/add/operator/catch';
 
 @Injectable()
 export class Meetup {
-    code: any;
     accessToken: any;
     clientId: any;
     redirectURI: any;
@@ -18,7 +18,7 @@ export class Meetup {
         //OAuth
         this.clientId = 'mabrcd406k0hhhe6gms84lfaq0';
         this.redirectURI = 'http://localhost';
-        this.url = 'https://secure.meetup.com/oauth2/authorize?client_id=' + this.clientId + '&response_type=code&redirect_uri=' + this.redirectURI;
+        this.url = 'https://secure.meetup.com/oauth2/authorize?client_id=' + this.clientId + '&response_type=token&redirect_uri=' + this.redirectURI;
     }
 
     setAccessToken(token) {
@@ -31,7 +31,7 @@ export class Meetup {
         headers.append('Authorization', 'Bearer ' + this.accessToken);
         headers.append('Content-Type', 'application/json');
 
-        return this.http.post('', "null", {headers: headers}).map(res => res.json());
+        return this.http.post('https://api.meetup.com/2/profile/17707082/self', "null", {headers: headers}).map(res => res.json());
     }
 
     login(){
@@ -50,9 +50,10 @@ export class Meetup {
                 if(event.url.indexOf(this.redirectURI) > -1 ){
                     listener.unsubscribe();
                     browser.close();
-                    let code = event.url.split('=')[1].split('&')[0];
-                    this.code = code;
+                    let token = event.url.split('=')[1].split('&')[0];
+                    this.accessToken = token;
                     resolve(event.url);
+                    //this.getUserInfo()
                 } else {
                     reject("Could not authenticate");
                 }
