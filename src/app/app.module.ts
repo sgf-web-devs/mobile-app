@@ -1,3 +1,4 @@
+import { MeetupLoginButtonComponent } from './../components/meetup-login-button/meetup-login-button';
 import { BrowserModule } from '@angular/platform-browser';
 import { ErrorHandler, NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
@@ -28,7 +29,8 @@ import { IonicStorageModule } from '@ionic/storage';
         LoginPage,
         CheckInPage,
         PreCheckinPage,
-        AttendeeListItemComponent
+        AttendeeListItemComponent,
+        MeetupLoginButtonComponent
     ],
     imports: [
         BrowserModule,
@@ -46,7 +48,8 @@ import { IonicStorageModule } from '@ionic/storage';
         HomePage,
         LoginPage,
         CheckInPage,
-        PreCheckinPage
+        PreCheckinPage,
+        MeetupLoginButtonComponent
     ],
     providers: [
         StatusBar,
