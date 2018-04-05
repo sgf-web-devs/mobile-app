@@ -41,9 +41,31 @@ export class Meetup {
 
             let listener = browser.on('loadstart').subscribe((event: any) => {
 
-                //Ignore the Meetup authorize screen
-                if(event.url.indexOf('oauth2/authorize') > -1){
+                if(event.url.indexOf('login') > -1){
                     return;
+                }
+
+                if(event.url.indexOf('https://facebook.com') > -1 ){
+                    return;
+                }
+
+                if(event.url.indexOf('https://www.facebook.com') > -1 ){
+                    return;
+                }
+
+                if(event.url.indexOf('https://m.facebook.com/v2.6') > -1 ){
+                    return;
+                }
+
+                //Ignore the Meetup authorize screen
+                if(event.url.indexOf('https://secure.meetup.com/oauth2/authorize') > -1){
+                    return;
+                }
+
+                if(event.url.indexOf('http://localhost/#error') > -1 ){
+                    browser.close();
+                    alert('Could not authenticate');
+                    reject('Could not authenticate');
                 }
 
                 //Check the redirect uri
@@ -53,8 +75,9 @@ export class Meetup {
                     let token = event.url.split('=')[1].split('&')[0];
                     this.accessToken = token;
                     resolve(event.url);
-                    //this.getUserInfo()
+                    this.getUserInfo()
                 } else {
+                    alert("Could not authenticate");
                     reject("Could not authenticate");
                 }
             });
