@@ -65,7 +65,7 @@ export class LoginPage implements OnInit {
     }
 
     loginOverride(){
-        this.meetup.tokenOverride(this.token).then(()=>{
+        this.meetup.browserTokenOverride(this.token).then(()=>{
             this.navCtrl.setRoot(HomePage);
         });
     }
@@ -77,7 +77,7 @@ export class LoginPage implements OnInit {
                 console.log(err);
             })
         } else {
-            this.meetup.getTokenFromBrowser();
+            this.meetup.browserLogin();
         }
 
         //this.auth.login();

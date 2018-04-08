@@ -12,13 +12,21 @@ export class Meetup {
     clientId: any;
     redirectURI: any;
     url: any;
+    browserClientId: any;
+    browserRedirectURI: any;
+    browserUrl: any;
 
     constructor(public http: Http, public iab: InAppBrowser) {
-
         //OAuth
         this.clientId = 'mabrcd406k0hhhe6gms84lfaq0';
         this.redirectURI = 'http://localhost';
         this.url = 'https://secure.meetup.com/oauth2/authorize?client_id=' + this.clientId + '&response_type=token&redirect_uri=' + this.redirectURI;
+
+        //Need these for running locally with only a web browser on port 8100
+        this.browserClientId = 'c6rhrufurnhhfl3e7nirenh9nl';
+        this.browserRedirectURI = 'http://localhost:8100';
+        this.browserUrl = 'https://secure.meetup.com/oauth2/authorize?client_id=' + this.browserClientId + '&response_type=token&redirect_uri=' + this.browserRedirectURI;
+        
     }
 
     setAccessToken(token) {
@@ -34,12 +42,13 @@ export class Meetup {
 
         return this.http.get('https://api.meetup.com/2/member/self/', { headers: headers }).map(res => res.json());
     }
+
     getCurrentUserInfo(){
         let headers = new Headers();
-        return this.http.get('https://api.meetup.com/members/self/?access_token=' + this.accessToken, { headers: headers }).toPromise();
-        
+        return this.http.get('https://api.meetup.com/members/self/?access_token=' + this.accessToken, { headers: headers }).toPromise();        
     }
-    tokenOverride(token: string){
+
+    browserTokenOverride(token: string){
         return new Promise((resolve,reject) => {
             if(token && token.length > 0){
                 this.accessToken = token;
@@ -50,8 +59,8 @@ export class Meetup {
         });
     }
 
-    getTokenFromBrowser(){
-        this.iab.create(this.url, '_blank');
+    browserLogin(){
+        this.iab.create(this.browserUrl, '_blank');
     }
 
     login() {
