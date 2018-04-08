@@ -36,11 +36,11 @@ export class LoginPage implements OnInit {
     }
 
     ngOnInit() {
-        this.storage.get('user').then((user) => {
-            if(user) {
-                this.navCtrl.push(HomePage);
-            }
-        });
+        // this.storage.get('user').then((user) => {
+        //     if(user) {
+        //         this.navCtrl.push(HomePage);
+        //     }
+        // });
 
         // this.loginChange = this.auth.getLoginChangeEmitter()
         //     .subscribe(user => this.onLoginChange(user));
