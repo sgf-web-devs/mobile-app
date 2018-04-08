@@ -10,6 +10,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import 'rxjs/add/operator/map'
 import { Storage } from '@ionic/storage';
 import { Meetup } from '../../providers/authentication/meetup';
+import { WebDevs } from '../../providers/webdevs/webdevs';
 
 @Component({
     selector: 'page-home',
@@ -32,7 +33,8 @@ export class HomePage implements OnInit {
         private jsonp: Jsonp,
         private storage: Storage,
         public plt: Platform,
-        private meetup: Meetup
+        private meetup: Meetup,
+        private webdevs: WebDevs
     ) {
         this.checkedIn = false;
         this.items = db.list('user').valueChanges();
@@ -69,14 +71,14 @@ export class HomePage implements OnInit {
     }
 
     checkIn(){
-        this.checkinCall().subscribe(goodCheckIn => {
+        this.webdevs.checkin(this.currentUser).subscribe(goodCheckIn => {
+            console.log('check response:', goodCheckIn);
             if(goodCheckIn) {
                 this.checkedIn = true;
                 this.cacheCheckin();
             }
         });
     }
-
 
     queryMeetup() {
         let url = 'https://api.meetup.com/SGF-Web-Devs/events?scroll=next_upcoming&photo-host=public&page=1&sig_id=28541422&sig=71b4eb87e5e64e8f1dd28c65cc1b01ff71dd0828&callback=JSONP_CALLBACK';
@@ -116,17 +118,6 @@ export class HomePage implements OnInit {
 
     openNextEventInBrowser(url) {
         window.open(url);
-    }
-
-    checkinCall() {
-        const httpOptions = {
-            headers: new HttpHeaders({
-                'Content-Type': 'application/json'
-            })
-        };
-
-        return this.http.post('http://demo9029555.mockable.io/checkin', { 'value1': 'yep' }, httpOptions).map((res: Response) => res);
-        //return this.http.post('http://sgf-web-devs-staging.glitchedmob.com/api/checkin', { 'value1': 'yep' }, httpOptions).map((res: Response) => res);
     }
 
     allowedToCheckin() {

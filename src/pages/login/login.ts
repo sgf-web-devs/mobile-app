@@ -69,6 +69,11 @@ export class LoginPage implements OnInit {
             this.navCtrl.setRoot(HomePage);
         });
     }
+
+    clearLocal(){
+        this.storage.clear();
+    }
+
     login(){
         if(this.isApp){
             this.meetup.login().then((success) => {

@@ -23,6 +23,7 @@ import { HttpClientModule } from "@angular/common/http";
 import { JsonpModule } from '@angular/http';
 import { IonicStorageModule } from '@ionic/storage';
 import { Meetup } from "../providers/authentication/meetup";
+import { WebDevs } from "../providers/webdevs/webdevs";
 
 @NgModule({
     declarations: [
@@ -54,6 +55,7 @@ import { Meetup } from "../providers/authentication/meetup";
     ],
     providers: [
         Meetup,
+        WebDevs,
         StatusBar,
         SplashScreen,
         Geolocation,
