@@ -3,7 +3,8 @@
     <ion-list scrollY="true" no-lines>
         <ion-item class="user" color="grey-dark">
             <ion-avatar item-start>
-                <img src="assets/imgs/profile.jpg">
+                <img *ngIf="!currentUser" src="assets/imgs/profile.jpg">
+                <img *ngIf="currentUser" [src]="currentUser.photo.thumb_link">
             </ion-avatar>
 
             <h1 *ngIf="auth.user">{{ auth.user.displayName }}</h1>

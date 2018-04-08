@@ -25,6 +25,11 @@
         <div class="cta">
             <img src="assets/imgs/github-button.svg" alt="Login" (click)="login()">
         </div>
+        <div class="cta" *ngIf="!isApp">
+            <label for="token_override" style="color: white;">Token:</label>
+            <input id="token_override" type="text" [(ngModel)]="token"/>
+            <button ion-button (click)="loginOverride()">Go</button>
+        </div>
 
         <footer>
             Web Dev Community in Springfield, MO

@@ -21,7 +21,8 @@ import { Meetup } from "../../providers/authentication/meetup";
 })
 export class LoginPage implements OnInit {
     loginChange: any;
-
+    isApp: boolean;
+    token: string;
 
     constructor(
         public navCtrl: NavController,
@@ -55,14 +56,29 @@ export class LoginPage implements OnInit {
 
     ionViewDidLoad() {
         console.log('ionViewDidLoad LoginPage');
+
+        if(this.plt.is('core') || this.plt.is('mobileweb')) {
+            this.isApp = false;
+        } else {
+            this.isApp = true;
+        }
     }
 
-    login(){
-        this.meetup.login().then((success) => {
+    loginOverride(){
+        this.meetup.tokenOverride(this.token).then(()=>{
             this.navCtrl.setRoot(HomePage);
-        }, (err) => {
-            console.log(err);
-        })
+        });
+    }
+    login(){
+        if(this.isApp){
+            this.meetup.login().then((success) => {
+                this.navCtrl.setRoot(HomePage);
+            }, (err) => {
+                console.log(err);
+            })
+        } else {
+            this.meetup.getTokenFromBrowser();
+        }
 
         //this.auth.login();
 

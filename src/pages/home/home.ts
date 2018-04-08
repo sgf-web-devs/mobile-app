@@ -9,6 +9,7 @@ import { Jsonp } from '@angular/http';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import 'rxjs/add/operator/map'
 import { Storage } from '@ionic/storage';
+import { Meetup } from '../../providers/authentication/meetup';
 
 @Component({
     selector: 'page-home',
@@ -20,6 +21,7 @@ export class HomePage implements OnInit {
     items: any;
     latestMeetup: any;
     checkedIn: boolean;
+    currentUser: any;
 
     constructor(
         public navCtrl: NavController,
@@ -29,7 +31,8 @@ export class HomePage implements OnInit {
         private http:HttpClient,
         private jsonp: Jsonp,
         private storage: Storage,
-        public plt: Platform
+        public plt: Platform,
+        private meetup: Meetup
     ) {
         this.checkedIn = false;
         this.items = db.list('user').valueChanges();
@@ -44,6 +47,12 @@ export class HomePage implements OnInit {
         this.attendeeProvier.getAttendees().subscribe(
             attendees => this.attendees = attendees,
         );
+        this.meetup.getCurrentUserInfo().then(userData => {
+            this.currentUser = userData.json();
+            console.log('current user: ', this.currentUser);
+        }).catch(()=>{
+            console.log('error');
+        });
     }
 
     getLatestMeetup() {
@@ -161,6 +170,10 @@ export class HomePage implements OnInit {
     }
 
     initPushNotifications() {
+        if(this.plt.is('core') || this.plt.is('mobileweb')) {
+            return; //don't init if in browser
+        } 
+
         let notificationOpenedCallback = function(jsonData) {
             alert('notificationOpenedCallback: ' + JSON.stringify(jsonData));
         };

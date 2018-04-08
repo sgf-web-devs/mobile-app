@@ -25,51 +25,71 @@ export class Meetup {
         this.accessToken = token;
     }
 
-    getUserInfo(){
+    getUserInfo() {
         let headers = new Headers();
 
         headers.append('Authorization', 'Bearer ' + this.accessToken);
         headers.append('Content-Type', 'application/json');
+        headers.append('Origin', 'http://localhost:8100');
 
-        return this.http.post('https://api.meetup.com/2/profile/17707082/self', "null", {headers: headers}).map(res => res.json());
+        return this.http.get('https://api.meetup.com/2/member/self/', { headers: headers }).map(res => res.json());
+    }
+    getCurrentUserInfo(){
+        let headers = new Headers();
+        return this.http.get('https://api.meetup.com/members/self/?access_token=' + this.accessToken, { headers: headers }).toPromise();
+        
+    }
+    tokenOverride(token: string){
+        return new Promise((resolve,reject) => {
+            if(token && token.length > 0){
+                this.accessToken = token;
+                resolve();     
+            } else {
+                reject('invalid token');
+            }
+        });
     }
 
-    login(){
+    getTokenFromBrowser(){
+        this.iab.create(this.url, '_blank');
+    }
+
+    login() {
         return new Promise((resolve, reject) => {
 
             let browser = this.iab.create(this.url, '_blank');
 
             let listener = browser.on('loadstart').subscribe((event: any) => {
 
-                if(event.url.indexOf('login') > -1){
+                if (event.url.indexOf('login') > -1) {
                     return;
                 }
 
-                if(event.url.indexOf('https://facebook.com') > -1 ){
+                if (event.url.indexOf('https://facebook.com') > -1) {
                     return;
                 }
 
-                if(event.url.indexOf('https://www.facebook.com') > -1 ){
+                if (event.url.indexOf('https://www.facebook.com') > -1) {
                     return;
                 }
 
-                if(event.url.indexOf('https://m.facebook.com/v2.6') > -1 ){
+                if (event.url.indexOf('https://m.facebook.com/v2.6') > -1) {
                     return;
                 }
 
                 //Ignore the Meetup authorize screen
-                if(event.url.indexOf('https://secure.meetup.com/oauth2/authorize') > -1){
+                if (event.url.indexOf('https://secure.meetup.com/oauth2/authorize') > -1) {
                     return;
                 }
 
-                if(event.url.indexOf('http://localhost/#error') > -1 ){
+                if (event.url.indexOf('http://localhost/#error') > -1) {
                     browser.close();
                     alert('Could not authenticate');
                     reject('Could not authenticate');
                 }
 
                 //Check the redirect uri
-                if(event.url.indexOf(this.redirectURI) > -1 ){
+                if (event.url.indexOf(this.redirectURI) > -1) {
                     listener.unsubscribe();
                     browser.close();
                     let token = event.url.split('=')[1].split('&')[0];
