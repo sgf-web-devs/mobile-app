@@ -49,6 +49,22 @@ export class Meetup {
         return this.http.get(memberV3Url, { headers: headers }).toPromise();        
     }
 
+    getLatestEvent(){
+        let headers = new Headers();
+        let eventsV3Url = `${this.baseUrl}/SGF-Web-Devs/events?scroll=recent_past&access_token=${this.accessToken}`;
+        return this.http.get(eventsV3Url, {headers: headers}).map(res => {
+            let events = res.json();
+            console.log('events:', events);
+            for(let event of events){
+                if(event.status != 'past'){
+                    return event;
+                }
+            }
+            
+            return events[0];
+        });
+    }
+
     browserTokenOverride(token: string){
         return new Promise((resolve,reject) => {
             if(token && token.length > 0){

@@ -58,11 +58,10 @@ export class HomePage implements OnInit {
     }
 
     getLatestMeetup() {
-        return this.queryMeetup().subscribe(
-            data => {
-                if(data.data[0]) {
-                    this.latestMeetup = data.data[0];
-                }
+        return this.meetup.getLatestEvent().subscribe(
+            latestEvent => {
+                console.log('latestEvent: ', latestEvent);
+                this.latestMeetup = latestEvent
             },
             err => {
                 console.log(err);
@@ -80,11 +79,6 @@ export class HomePage implements OnInit {
         });
     }
 
-    queryMeetup() {
-        let url = 'https://api.meetup.com/SGF-Web-Devs/events?scroll=next_upcoming&photo-host=public&page=1&sig_id=28541422&sig=71b4eb87e5e64e8f1dd28c65cc1b01ff71dd0828&callback=JSONP_CALLBACK';
-        return this.jsonp.get(url).map(res => res.json());
-    }
-
     // uggggh. whatever - Myke
     trimDescription(description) {
         let trimSpot = description.indexOf('<p>Pizza');
@@ -99,7 +93,7 @@ export class HomePage implements OnInit {
     // Probably just need to pull moment in at some point for other features, too - Myke
     formatDate(date) {
         var d = new Date(date);
-        return d.getMonth() + '/' + d.getDate() + '/' + d.getFullYear().toString().replace('20', '');
+        return d.getMonth() + 1 + '/' + d.getDate() + '/' + d.getFullYear().toString().replace('20', '');
     }
 
     isCheckinTime(date) {
@@ -121,7 +115,7 @@ export class HomePage implements OnInit {
     }
 
     allowedToCheckin() {
-        if(this.latestMeetup && this.isCheckinTime(this.latestMeetup.local_date) && !this.checkedIn) {
+        if(this.latestMeetup && this.isCheckinTime(this.latestMeetup.time) && !this.checkedIn) {
             return true;
         }
 
