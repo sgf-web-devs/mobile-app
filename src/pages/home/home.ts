@@ -23,6 +23,7 @@ export class HomePage implements OnInit {
     latestMeetup: any;
     checkedIn: boolean;
     currentUser: any;
+    rsvpd: boolean;
 
     constructor(
         public navCtrl: NavController,
@@ -52,16 +53,32 @@ export class HomePage implements OnInit {
         this.meetup.getCurrentUserInfo().then(userData => {
             this.currentUser = userData.json();
             console.log('current user: ', this.currentUser);
+            this.checkRsvp();
         }).catch(()=>{
             console.log('error');
         });
     }
 
+    checkRsvp(){
+        if(this.latestMeetup && this.currentUser){
+            console.log('checking meetup rsvp');
+            this.meetup.checkRSVP(this.latestMeetup.id, this.currentUser.id).subscribe(
+                rsvpd => {
+                    this.rsvpd = rsvpd;
+                    console.log('rsvp:', rsvpd);
+                },
+                err => {
+                    console.log('failed to determine rsvp');
+                }
+            )
+        }
+    }
     getLatestMeetup() {
         return this.meetup.getLatestEvent().subscribe(
             latestEvent => {
                 console.log('latestEvent: ', latestEvent);
                 this.latestMeetup = latestEvent
+                this.checkRsvp();
             },
             err => {
                 console.log(err);
@@ -111,6 +128,28 @@ export class HomePage implements OnInit {
         return false;
     }
 
+    rsvp(eventId){
+        this.meetup.rsvp(eventId, "yes").subscribe(
+            res => {
+                this.rsvpd = true;
+            },
+            err => {
+                console.log('failed to rsvp');
+            }
+        );
+    }
+
+    cancelRsvp(eventId){
+        this.meetup.rsvp(eventId,"no").subscribe(
+            res => {
+                this.rsvpd = false;
+            },
+            err => {
+                console.log('failed to cancel rsvp');
+            }
+        );
+    }
+
     openNextEventInBrowser(url) {
         window.open(url);
     }
@@ -124,10 +163,17 @@ export class HomePage implements OnInit {
     }
 
     showRsvpLink() {
-        if(this.latestMeetup && !this.allowedToCheckin() && !this.checkedIn) {
+        if(this.latestMeetup && !this.allowedToCheckin() && !this.checkedIn && !this.rsvpd) {
             return true;
         }
 
+        return false;
+    }
+    
+    showCancelRsvp(){
+        if(this.latestMeetup && !this.allowedToCheckin() && this.rsvpd){
+            return true;
+        }
         return false;
     }
 

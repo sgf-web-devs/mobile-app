@@ -21,12 +21,12 @@ export class Meetup {
         //OAuth
         this.clientId = 'mabrcd406k0hhhe6gms84lfaq0';
         this.redirectURI = 'http://localhost';
-        this.url = 'https://secure.meetup.com/oauth2/authorize?client_id=' + this.clientId + '&response_type=token&redirect_uri=' + this.redirectURI;
+        this.url = 'https://secure.meetup.com/oauth2/authorize?scope=rsvp&client_id=' + this.clientId + '&response_type=token&redirect_uri=' + this.redirectURI;
 
         //Need these for running locally with only a web browser on port 8100
         this.browserClientId = 'c6rhrufurnhhfl3e7nirenh9nl';
         this.browserRedirectURI = 'http://localhost:8100';
-        this.browserUrl = 'https://secure.meetup.com/oauth2/authorize?client_id=' + this.browserClientId + '&response_type=token&redirect_uri=' + this.browserRedirectURI;
+        this.browserUrl = 'https://secure.meetup.com/oauth2/authorize?scope=rsvp&client_id=' + this.browserClientId + '&response_type=token&redirect_uri=' + this.browserRedirectURI;
 
         this.baseUrl = 'https://api.meetup.com';
     }
@@ -49,6 +49,29 @@ export class Meetup {
         return this.http.get(memberV3Url, { headers: headers }).toPromise();        
     }
 
+    rsvp(eventId, response){
+        let headers = new Headers();
+        let rsvpV3Url = `${this.baseUrl}/SGF-Web-Devs/events/${eventId}/rsvps?response=${response}&access_token=${this.accessToken}`;
+
+        let payload = { response }
+        return this.http.post(rsvpV3Url, payload, {headers: headers}).map(res => {
+            return res;
+        });
+    }
+    checkRSVP(eventId, userId){
+        let headers = new Headers();
+        let rsvpV3Url = `${this.baseUrl}/SGF-Web-Devs/events/${eventId}/rsvps?&access_token=${this.accessToken}`;
+        console.log('checking rsvp for ', eventId);
+        return this.http.get(rsvpV3Url, {headers: headers}).map(res => {
+            let rsvps = res.json();
+            for(let rsvp of rsvps){
+                if(rsvp.member.id === userId){
+                    return true;
+                }
+            }
+            return false;
+        });
+    }
     getLatestEvent(){
         let headers = new Headers();
         let eventsV3Url = `${this.baseUrl}/SGF-Web-Devs/events?scroll=recent_past&access_token=${this.accessToken}`;
