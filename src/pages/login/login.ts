@@ -1,4 +1,4 @@
-import { Component, OnInit, NgModule } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {IonicPage, NavController, NavParams, Platform} from 'ionic-angular';
 
 import { HomePage } from "../home/home";
