@@ -50,13 +50,14 @@ export class HomePage implements OnInit {
         this.attendeeProvier.getAttendees().subscribe(
             attendees => this.attendees = attendees,
         );
-        this.meetup.getCurrentUserInfo().then(userData => {
-            this.currentUser = userData.json();
-            console.log('current user: ', this.currentUser);
-            this.checkRsvp();
-        }).catch(()=>{
-            console.log('error');
-        });
+        this.meetup.getCurrentUserInfo().subscribe(
+            userData => {
+                this.currentUser = userData.json();
+                console.log('current user: ', this.currentUser);
+                this.checkRsvp();
+            }, err => {
+                console.log('error');
+            });
     }
 
     checkRsvp(){

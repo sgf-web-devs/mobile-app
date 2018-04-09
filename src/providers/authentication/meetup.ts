@@ -46,7 +46,7 @@ export class Meetup {
     getCurrentUserInfo(){
         let headers = new Headers();
         let memberV3Url = `${this.baseUrl}/members/self/?access_token=${this.accessToken}`;
-        return this.http.get(memberV3Url, { headers: headers }).toPromise();        
+        return this.http.get(memberV3Url, { headers: headers }).map(res=>res);        
     }
 
     rsvp(eventId, response){
