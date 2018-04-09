@@ -15,6 +15,7 @@ export class Meetup {
     browserClientId: any;
     browserRedirectURI: any;
     browserUrl: any;
+    baseUrl: string;
 
     constructor(public http: Http, public iab: InAppBrowser) {
         //OAuth
@@ -26,7 +27,8 @@ export class Meetup {
         this.browserClientId = 'c6rhrufurnhhfl3e7nirenh9nl';
         this.browserRedirectURI = 'http://localhost:8100';
         this.browserUrl = 'https://secure.meetup.com/oauth2/authorize?client_id=' + this.browserClientId + '&response_type=token&redirect_uri=' + this.browserRedirectURI;
-        
+
+        this.baseUrl = 'https://api.meetup.com';
     }
 
     setAccessToken(token) {
@@ -38,14 +40,13 @@ export class Meetup {
 
         headers.append('Authorization', 'Bearer ' + this.accessToken);
         headers.append('Content-Type', 'application/json');
-        headers.append('Origin', 'http://localhost:8100');
-
-        return this.http.get('https://api.meetup.com/2/member/self/', { headers: headers }).map(res => res.json());
+        return this.http.get(`${this.baseUrl}/2/member/self/`, { headers: headers }).map(res => res.json());
     }
 
     getCurrentUserInfo(){
         let headers = new Headers();
-        return this.http.get('https://api.meetup.com/members/self/?access_token=' + this.accessToken, { headers: headers }).toPromise();        
+        let memberV3Url = `${this.baseUrl}/members/self/?access_token=${this.accessToken}`;
+        return this.http.get(memberV3Url, { headers: headers }).toPromise();        
     }
 
     browserTokenOverride(token: string){
