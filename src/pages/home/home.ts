@@ -99,15 +99,16 @@ export class HomePage implements OnInit {
     isCheckinTime(date) {
         let today = new Date();
         let meetupDate = new Date(date);
+        let checkinClose = meetupDate.getHours() + 4;
+        let checkinOpen = meetupDate.getHours() - 1;
 
         if(today.getDay() == meetupDate.getDay() && today.getMonth() == meetupDate.getMonth()) {
-            if(today.getHours() >= 17 && today.getHours() <= 20) {
+            if(today.getHours() >= checkinOpen && today.getHours() <= checkinClose) {
                 return true;
             }
         }
 
-        //return false;
-        return true;
+        return false;
     }
 
     openNextEventInBrowser(url) {
