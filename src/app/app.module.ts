@@ -1,4 +1,3 @@
-import { MeetupLoginButtonComponent } from './../components/meetup-login-button/meetup-login-button';
 import { BrowserModule } from '@angular/platform-browser';
 import { ErrorHandler, NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
@@ -15,6 +14,7 @@ import { LoginPage } from "../pages/login/login";
 import { CheckInPage } from './../pages/check-in/check-in';
 import { Geolocation } from '@ionic-native/geolocation';
 import { AttendeeListItemComponent } from "../components/attendee-list-item/attendee-list-item";
+import { MeetupLoginButtonComponent } from './../components/meetup-login-button/meetup-login-button';
 import { AttendeeProvider } from '../providers/attendee/attendee';
 import { PreCheckinPage } from '../pages/pre-checkin/pre-checkin';
 import { AuthenticationProvider } from '../providers/authentication/authentication';
@@ -56,8 +56,8 @@ import { IonicStorageModule } from '@ionic/storage';
         SplashScreen,
         Geolocation,
         {provide: ErrorHandler, useClass: IonicErrorHandler},
-    AttendeeProvider,
-    AuthenticationProvider
+        AttendeeProvider,
+        AuthenticationProvider
     ]
 })
 export class AppModule {

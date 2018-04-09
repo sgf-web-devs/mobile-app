@@ -1,4 +1,3 @@
-import { MeetupLoginButtonComponent } from './../../components/meetup-login-button/meetup-login-button';
 import { Component, OnInit, NgModule } from '@angular/core';
 import {IonicPage, NavController, NavParams, Platform} from 'ionic-angular';
 
