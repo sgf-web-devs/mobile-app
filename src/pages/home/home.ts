@@ -60,7 +60,7 @@ export class HomePage implements OnInit {
     }
 
     checkRsvp(){
-        if(this.latestMeetup && this.currentUser){
+        if(this.latestMeetup && this.currentUser && !this.checkedIn){
             console.log('checking meetup rsvp');
             this.meetup.checkRSVP(this.latestMeetup.id, this.currentUser.id).subscribe(
                 rsvpd => {
@@ -125,7 +125,7 @@ export class HomePage implements OnInit {
             }
         }
 
-        return false;
+        return true;
     }
 
     rsvp(eventId){
@@ -171,7 +171,7 @@ export class HomePage implements OnInit {
     }
     
     showCancelRsvp(){
-        if(this.latestMeetup && !this.allowedToCheckin() && this.rsvpd){
+        if(this.latestMeetup && !this.allowedToCheckin() && !this.checkCheckIn && this.rsvpd){
             return true;
         }
         return false;
