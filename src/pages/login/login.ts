@@ -21,7 +21,8 @@ import { Meetup } from "../../providers/authentication/meetup";
 })
 export class LoginPage implements OnInit {
     loginChange: any;
-
+    isApp: boolean;
+    token: string;
 
     constructor(
         public navCtrl: NavController,
@@ -35,11 +36,11 @@ export class LoginPage implements OnInit {
     }
 
     ngOnInit() {
-        this.storage.get('user').then((user) => {
-            if(user) {
-                this.navCtrl.push(HomePage);
-            }
-        });
+        // this.storage.get('user').then((user) => {
+        //     if(user) {
+        //         this.navCtrl.push(HomePage);
+        //     }
+        // });
 
         // this.loginChange = this.auth.getLoginChangeEmitter()
         //     .subscribe(user => this.onLoginChange(user));
@@ -55,14 +56,34 @@ export class LoginPage implements OnInit {
 
     ionViewDidLoad() {
         console.log('ionViewDidLoad LoginPage');
+
+        if(this.plt.is('core') || this.plt.is('mobileweb')) {
+            this.isApp = false;
+        } else {
+            this.isApp = true;
+        }
+    }
+
+    loginOverride(){
+        this.meetup.browserTokenOverride(this.token).then(()=>{
+            this.navCtrl.setRoot(HomePage);
+        });
+    }
+
+    clearLocal(){
+        this.storage.clear();
     }
 
     login(){
-        this.meetup.login().then((success) => {
-            this.navCtrl.setRoot(HomePage);
-        }, (err) => {
-            console.log(err);
-        })
+        if(this.isApp){
+            this.meetup.login().then((success) => {
+                this.navCtrl.setRoot(HomePage);
+            }, (err) => {
+                console.log(err);
+            })
+        } else {
+            this.meetup.browserLogin();
+        }
 
         //this.auth.login();
 

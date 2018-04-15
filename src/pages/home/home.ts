@@ -9,6 +9,8 @@ import { Jsonp } from '@angular/http';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import 'rxjs/add/operator/map'
 import { Storage } from '@ionic/storage';
+import { Meetup } from '../../providers/authentication/meetup';
+import { WebDevs } from '../../providers/webdevs/webdevs';
 
 @Component({
     selector: 'page-home',
@@ -20,6 +22,10 @@ export class HomePage implements OnInit {
     items: any;
     latestMeetup: any;
     checkedIn: boolean;
+    currentUser: any;
+    rsvpd: boolean;
+    logs: string[];
+    logging: boolean;
 
     constructor(
         public navCtrl: NavController,
@@ -29,8 +35,12 @@ export class HomePage implements OnInit {
         private http:HttpClient,
         private jsonp: Jsonp,
         private storage: Storage,
-        public plt: Platform
+        public plt: Platform,
+        private meetup: Meetup,
+        private webdevs: WebDevs
     ) {
+        this.logs = [];
+        this.logging = false;
         this.checkedIn = false;
         this.items = db.list('user').valueChanges();
 
@@ -39,39 +49,63 @@ export class HomePage implements OnInit {
         this.initPushNotifications();
     }
 
+    log(message, obj={}){
+        if(this.logging){
+            this.logs.push(`${message}: ${JSON.stringify(obj)}`);
+        }
+
+        console.log(message, obj);
+    }
 
     ngOnInit() {
         this.attendeeProvier.getAttendees().subscribe(
             attendees => this.attendees = attendees,
         );
+        this.meetup.getCurrentUserInfo().subscribe(
+            userData => {
+                this.currentUser = userData.json();
+                this.log('current user: ', this.currentUser);
+                this.checkRsvp();
+            }, err => {
+                this.log('error getting User info', err);
+            });
     }
 
-    getLatestMeetup() {
-        return this.queryMeetup().subscribe(
-            data => {
-                if(data.data[0]) {
-                    this.latestMeetup = data.data[0];
+    checkRsvp(){
+        if(this.latestMeetup && this.currentUser && !this.checkedIn){
+            this.log('checking meetup rsvp');
+            this.meetup.checkRSVP(this.latestMeetup.id, this.currentUser.id).subscribe(
+                rsvpd => {
+                    this.rsvpd = rsvpd;
+                    this.log('rsvp:', rsvpd);
+                },
+                err => {
+                    this.log('error determining rsvp', err);
                 }
+            )
+        }
+    }
+    getLatestMeetup() {
+        return this.meetup.getLatestEvent().subscribe(
+            latestEvent => {
+                this.log('latestEvent: ', latestEvent);
+                this.latestMeetup = latestEvent
+                this.checkRsvp();
             },
             err => {
-                console.log(err);
+                this.log('error getting latest meetup info', err);
             }
         );
     }
 
     checkIn(){
-        this.checkinCall().subscribe(goodCheckIn => {
+        this.webdevs.checkin(this.currentUser).subscribe(goodCheckIn => {
+            this.log('check response:', goodCheckIn);
             if(goodCheckIn) {
                 this.checkedIn = true;
                 this.cacheCheckin();
             }
         });
-    }
-
-
-    queryMeetup() {
-        let url = 'https://api.meetup.com/SGF-Web-Devs/events?scroll=next_upcoming&photo-host=public&page=1&sig_id=28541422&sig=71b4eb87e5e64e8f1dd28c65cc1b01ff71dd0828&callback=JSONP_CALLBACK';
-        return this.jsonp.get(url).map(res => res.json());
     }
 
     // uggggh. whatever - Myke
@@ -88,40 +122,52 @@ export class HomePage implements OnInit {
     // Probably just need to pull moment in at some point for other features, too - Myke
     formatDate(date) {
         var d = new Date(date);
-        return d.getMonth() + '/' + d.getDate() + '/' + d.getFullYear().toString().replace('20', '');
+        return d.getMonth() + 1 + '/' + d.getDate() + '/' + d.getFullYear().toString().replace('20', '');
     }
 
     isCheckinTime(date) {
         let today = new Date();
         let meetupDate = new Date(date);
+        let checkinClose = meetupDate.getHours() + 4;
+        let checkinOpen = meetupDate.getHours() - 1;
 
         if(today.getDay() == meetupDate.getDay() && today.getMonth() == meetupDate.getMonth()) {
-            if(today.getHours() >= 17 && today.getHours() <= 20) {
+            if(today.getHours() >= checkinOpen && today.getHours() <= checkinClose) {
                 return true;
             }
         }
 
-        //return false;
-        return true;
+        return false;
+    }
+
+    rsvp(eventId){
+        this.meetup.rsvp(eventId, "yes").subscribe(
+            res => {
+                this.rsvpd = true;
+            },
+            err => {
+                this.log('error rsvping', err);
+            }
+        );
+    }
+
+    cancelRsvp(eventId){
+        this.meetup.rsvp(eventId,"no").subscribe(
+            res => {
+                this.rsvpd = false;
+            },
+            err => {
+                this.log('error cancelling rsvp', err);
+            }
+        );
     }
 
     openNextEventInBrowser(url) {
         window.open(url);
     }
 
-    checkinCall() {
-        const httpOptions = {
-            headers: new HttpHeaders({
-                'Content-Type': 'application/json'
-            })
-        };
-
-        return this.http.post('http://demo9029555.mockable.io/checkin', { 'value1': 'yep' }, httpOptions).map((res: Response) => res);
-        //return this.http.post('http://sgf-web-devs-staging.glitchedmob.com/api/checkin', { 'value1': 'yep' }, httpOptions).map((res: Response) => res);
-    }
-
     allowedToCheckin() {
-        if(this.latestMeetup && this.isCheckinTime(this.latestMeetup.local_date) && !this.checkedIn) {
+        if(this.latestMeetup && this.isCheckinTime(this.latestMeetup.time) && !this.checkedIn) {
             return true;
         }
 
@@ -129,10 +175,17 @@ export class HomePage implements OnInit {
     }
 
     showRsvpLink() {
-        if(this.latestMeetup && !this.allowedToCheckin() && !this.checkedIn) {
+        if(this.latestMeetup && !this.allowedToCheckin() && !this.checkedIn && !this.rsvpd) {
             return true;
         }
 
+        return false;
+    }
+    
+    showCancelRsvp(){
+        if(this.latestMeetup && !this.allowedToCheckin() && !this.checkedIn && this.rsvpd){
+            return true;
+        }
         return false;
     }
 
@@ -161,6 +214,10 @@ export class HomePage implements OnInit {
     }
 
     initPushNotifications() {
+        if(this.plt.is('core') || this.plt.is('mobileweb')) {
+            return; //don't init if in browser
+        } 
+
         let notificationOpenedCallback = function(jsonData) {
             alert('notificationOpenedCallback: ' + JSON.stringify(jsonData));
         };
