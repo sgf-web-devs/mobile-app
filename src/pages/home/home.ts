@@ -170,6 +170,10 @@ export class HomePage implements OnInit {
                 .startInit("0b60a144-1ecf-4903-8c16-76bec9905e8f", "673684652707")
                 .handleNotificationOpened(notificationOpenedCallback)
                 .endInit();
+
+            // Placing this here for now...
+            // Need to call this as soon as we get the users email address from auth routine
+            //window["plugins"].OneSignal.sendTag('email', 'theuser@email.com');
         }
 
         if(this.plt.is('ios')) {
@@ -177,6 +181,10 @@ export class HomePage implements OnInit {
                 .startInit("0b60a144-1ecf-4903-8c16-76bec9905e8f")
                 .handleNotificationOpened(notificationOpenedCallback)
                 .endInit();
+
+            // Placing this here for now...
+            // Need to call this as soon as we get the users email address from auth routine
+            //window["plugins"].OneSignal.sendTag('email', 'theuser@email.com');
         }
     }
 }
