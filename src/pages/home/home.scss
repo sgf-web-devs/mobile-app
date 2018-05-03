@@ -14,8 +14,14 @@ page-home {
 			color: black;
 		}
 
-        .description p {
-            margin-bottom: 1em;
+        .description {
+			&.minimized{
+				height: 20px;
+			}
+			p {
+				margin-bottom: 1em;
+			}
+			
         }
 	}
 
