@@ -1,39 +1,36 @@
-import { Component, OnInit } from '@angular/core';
-import {NavController, Platform} from 'ionic-angular';
-import { CheckInPage } from './../check-in/check-in';
-import { AttendeeProvider } from './../../providers/attendee/attendee';
-import { PreCheckinPage } from '../pre-checkin/pre-checkin';
-import {AuthenticationProvider} from "../../providers/authentication/authentication";
-import { AngularFireDatabase } from 'angularfire2/database';
-import { Jsonp } from '@angular/http';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import 'rxjs/add/operator/map'
+import { Component, OnInit } from '@angular/core';
+import { Jsonp } from '@angular/http';
 import { Storage } from '@ionic/storage';
+import { NavController, Platform } from 'ionic-angular';
+import 'rxjs/add/operator/map';
+
+import { AuthenticationProvider } from "../../providers/authentication/authentication";
+import { AttendeeProvider } from './../../providers/attendee/attendee';
+import { CheckInPage } from './../check-in/check-in';
+import { environment } from './../../environments/environment';
 
 @Component({
     selector: 'page-home',
     templateUrl: 'home.html'
 })
 export class HomePage implements OnInit {
-    attendees: any;
     checkInPage = CheckInPage;
-    items: any;
+    attendees: any;
     latestMeetup: any;
     checkedIn: boolean;
     showMore: boolean;
 
     constructor(
-        public navCtrl: NavController,
         private attendeeProvier: AttendeeProvider,
-        public auth: AuthenticationProvider,
-        private db: AngularFireDatabase,
         private http:HttpClient,
         private jsonp: Jsonp,
         private storage: Storage,
+        public navCtrl: NavController,
+        public auth: AuthenticationProvider,
         public plt: Platform
     ) {
         this.checkedIn = false;
-        this.items = db.list('user').valueChanges();
 
         this.getLatestMeetup();
         this.checkCheckIn();
@@ -171,7 +168,7 @@ export class HomePage implements OnInit {
 
         if(this.plt.is('android')) {
             window["plugins"].OneSignal
-                .startInit("0b60a144-1ecf-4903-8c16-76bec9905e8f", "673684652707")
+                .startInit(environment.oneSignal.appID, environment.oneSignal.projectNumber)
                 .handleNotificationOpened(notificationOpenedCallback)
                 .endInit();
 
@@ -182,7 +179,7 @@ export class HomePage implements OnInit {
 
         if(this.plt.is('ios')) {
             window["plugins"].OneSignal
-                .startInit("0b60a144-1ecf-4903-8c16-76bec9905e8f")
+                .startInit(environment.oneSignal.appID)
                 .handleNotificationOpened(notificationOpenedCallback)
                 .endInit();
 

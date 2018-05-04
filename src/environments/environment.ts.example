@@ -1,5 +1,6 @@
 export const environment = {
     production: false,
+    apiroot: 'http://localhost:8000',
     firebase: {
         apiKey: "AIzaSyAH3PYBcc4Mbf64ZqKcAVzAhM2r2gTHgzY",
         authDomain: "sgf-web-devs-api.firebaseapp.com",
@@ -7,5 +8,9 @@ export const environment = {
         projectId: "sgf-web-devs-api",
         storageBucket: "sgf-web-devs-api.appspot.com",
         messagingSenderId: "673684652707"
+    },
+    oneSignal: {
+        appID: '',
+        projectNumber: ''
     }
 };
