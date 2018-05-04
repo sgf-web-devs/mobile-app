@@ -1,6 +1,11 @@
 export const environment = {
     production: false,
     apiroot: 'http://localhost:8000',
+    pusher: {
+        appKey: '',
+        cluster: '',
+        encrypted: true,
+    },
     oneSignal: {
         appID: '',
         projectNumber: ''

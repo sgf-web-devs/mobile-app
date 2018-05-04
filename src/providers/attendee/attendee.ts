@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs/observable';
 import { of } from 'rxjs/observable/of';
-/*
-  Generated class for the AttendeeProvider provider.
+import * as Pusher from 'pusher-js';
 
-  See https://angular.io/guide/dependency-injection for more info on providers
-  and Angular DI.
-*/
+import { environment } from './../../environments/environment';
+
 @Injectable()
 export class AttendeeProvider {
 
@@ -86,11 +85,24 @@ export class AttendeeProvider {
         "profileImg": "assets/imgs/profile.jpg"
     }];
 
+    private pusher = new Pusher(environment.pusher.appKey, {
+        cluster: environment.pusher.cluster,
+        encrypted: environment.pusher.encrypted
+    });
+
     constructor() {
     }
 
     getAttendees() {
         return of(this.attendees);
+    }
+
+    liveAttendees(): Observable<any> {
+        const channel = this.pusher.subscribe('my-channel');
+
+        return Observable.create(observer => {
+            channel.bind('my-event', data => observer.next(data));
+        });
     }
 
 }
