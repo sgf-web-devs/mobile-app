@@ -5,7 +5,6 @@ import { Storage } from '@ionic/storage';
 import { NavController, Platform } from 'ionic-angular';
 import 'rxjs/add/operator/map';
 
-import { AuthenticationProvider } from "../../providers/authentication/authentication";
 import { AttendeeProvider } from './../../providers/attendee/attendee';
 import { CheckInPage } from './../check-in/check-in';
 import { environment } from './../../environments/environment';
@@ -27,7 +26,6 @@ export class HomePage implements OnInit {
         private jsonp: Jsonp,
         private storage: Storage,
         public navCtrl: NavController,
-        public auth: AuthenticationProvider,
         public plt: Platform
     ) {
         this.checkedIn = false;

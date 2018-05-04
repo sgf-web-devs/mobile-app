@@ -1,8 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import {IonicPage, NavController, NavParams, Platform} from 'ionic-angular';
+import {
+    IonicPage,
+    NavController,
+    NavParams,
+    Platform
+} from 'ionic-angular';
 
 import { HomePage } from "../home/home";
-import {AuthenticationProvider} from "../../providers/authentication/authentication";
 import { Storage } from '@ionic/storage';
 
 /**
@@ -21,9 +25,12 @@ export class LoginPage implements OnInit {
     loginChange: any;
 
 
-    constructor(public navCtrl: NavController, public navParams: NavParams, private auth: AuthenticationProvider, public plt: Platform, public storage: Storage) {
-
-    }
+    constructor(
+        public navCtrl: NavController,
+        public navParams: NavParams,
+        public plt: Platform,
+        public storage: Storage
+    ) { }
 
     ngOnInit() {
         this.storage.get('user').then((user) => {
@@ -38,7 +45,6 @@ export class LoginPage implements OnInit {
 
     onLoginChange(user:any){
         if(user){
-            console.log(JSON.stringify(this.auth.user.displayName));
             this.navCtrl.setRoot(HomePage).then(() =>{});
             //this.navCtrl.push(HomePage);
         }

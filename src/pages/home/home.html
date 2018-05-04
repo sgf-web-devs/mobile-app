@@ -6,7 +6,7 @@
                 <img src="assets/imgs/profile.jpg">
             </ion-avatar>
 
-            <h1 *ngIf="auth.user">{{ auth.user.displayName }}</h1>
+            <h1>Username</h1>
             <button ion-button block outline color="light" (click)="checkIn()" *ngIf="allowedToCheckin()">Check in</button>
             <button ion-button block outline color="light" (click)="openNextEventInBrowser(latestMeetup.link)" *ngIf="showRsvpLink()">RSVP For The Next Meetup</button>
             <h3 *ngIf="checkedIn" text-wrap>You are checked in. Grab some pizza and enjoy the night!</h3>
@@ -32,7 +32,7 @@
             </ion-grid>
         </ion-item>
         <ion-item color="primary-light" *ngIf="!showMore" (click)="toggleDescription()">
-            <ion-grid>                    
+            <ion-grid>
                 <ion-row text-right>
                     <ion-col col-12>
                         <div>...Show More</div>
