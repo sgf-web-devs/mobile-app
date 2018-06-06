@@ -44,9 +44,6 @@ export class HomePage implements OnInit {
         this.checkedIn = false;
         this.items = db.list('user').valueChanges();
 
-        this.getLatestMeetup();
-        this.checkCheckIn();
-        this.initPushNotifications();
     }
 
     log(message, obj={}){
@@ -58,18 +55,29 @@ export class HomePage implements OnInit {
     }
 
     ngOnInit() {
+        this.currentUser = {
+            name: 'Myke Bates',
+            photo: 'assets/imgs/profile.jpg'
+        };
+
+        this.getLatestMeetup();
+        this.checkCheckIn();
+        this.initPushNotifications();
+
         this.attendeeProvier.getAttendees().subscribe(
             attendees => this.attendees = attendees,
         );
-        this.meetup.getCurrentUserInfo().subscribe(
+        this.meetup.getCurrentUserInfo().then(
             userData => {
-                this.currentUser = userData.json();
+                this.currentUser = userData;
                 this.log('current user: ', this.currentUser);
-                this.checkRsvp();
+                //this.checkRsvp();
             }, err => {
                 this.log('error getting User info', err);
             });
     }
+
+
 
     checkRsvp(){
         if(this.latestMeetup && this.currentUser && !this.checkedIn){
@@ -86,11 +94,15 @@ export class HomePage implements OnInit {
         }
     }
     getLatestMeetup() {
-        return this.meetup.getLatestEvent().subscribe(
+
+        //let hey = this.meetup.getLatestEvent();
+        //console.log(hey);
+        //this.latestMeetup = hey;
+        this.meetup.getLatestEvent().then(
             latestEvent => {
                 this.log('latestEvent: ', latestEvent);
-                this.latestMeetup = latestEvent
-                this.checkRsvp();
+                this.latestMeetup = latestEvent;
+                //this.checkRsvp();
             },
             err => {
                 this.log('error getting latest meetup info', err);
@@ -99,7 +111,19 @@ export class HomePage implements OnInit {
     }
 
     checkIn(){
-        this.webdevs.checkin(this.currentUser).subscribe(goodCheckIn => {
+        //let url = 'https://admin.sgfwebdevs.com/api/checkin';
+        let url = "https://requestbin.fullcontact.com/15i80oe1";
+
+        let checkinData = {
+            email: this.currentUser.email,
+            name: this.currentUser.name,
+            image: this.currentUser.photo.photo_link
+        };
+
+
+        this.http.get(url).map(res => res);
+
+        this.webdevs.checkin(this.currentUser).then(goodCheckIn => {
             this.log('check response:', goodCheckIn);
             if(goodCheckIn) {
                 this.checkedIn = true;
@@ -129,7 +153,7 @@ export class HomePage implements OnInit {
         let today = new Date();
         let meetupDate = new Date(date);
         let checkinClose = meetupDate.getHours() + 4;
-        let checkinOpen = meetupDate.getHours() - 1;
+        let checkinOpen = meetupDate.getHours() - 4;
 
         if(today.getDay() == meetupDate.getDay() && today.getMonth() == meetupDate.getMonth()) {
             if(today.getHours() >= checkinOpen && today.getHours() <= checkinClose) {
@@ -181,7 +205,7 @@ export class HomePage implements OnInit {
 
         return false;
     }
-    
+
     showCancelRsvp(){
         if(this.latestMeetup && !this.allowedToCheckin() && !this.checkedIn && this.rsvpd){
             return true;
@@ -216,7 +240,7 @@ export class HomePage implements OnInit {
     initPushNotifications() {
         if(this.plt.is('core') || this.plt.is('mobileweb')) {
             return; //don't init if in browser
-        } 
+        }
 
         let notificationOpenedCallback = function(jsonData) {
             alert('notificationOpenedCallback: ' + JSON.stringify(jsonData));

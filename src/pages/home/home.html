@@ -8,9 +8,10 @@
             </ion-avatar>
 
             <h1 *ngIf="currentUser">{{ currentUser.name }}</h1>
+
             <button ion-button block outline color="light" (click)="checkIn()" *ngIf="allowedToCheckin()">Check in</button>
-            <button ion-button block outline color="light" (click)="rsvp(latestMeetup.id)" *ngIf="showRsvpLink()">RSVP For The Next Meetup</button>
-            <button ion-button block outline color="danger" (click)="cancelRsvp(latestMeetup.id)" *ngIf="showCancelRsvp()">Cancel RSVP</button>
+            <!--<button ion-button block outline color="light" (click)="rsvp(latestMeetup.id)" *ngIf="showRsvpLink()">RSVP For The Next Meetup</button>-->
+            <!--<button ion-button block outline color="danger" (click)="cancelRsvp(latestMeetup.id)" *ngIf="showCancelRsvp()">Cancel RSVP</button>-->
             <h3 *ngIf="checkedIn" text-wrap>You are checked in. Grab some pizza and enjoy the night!</h3>
         </ion-item>
 
@@ -36,7 +37,7 @@
                 <ion-row>
                     <ion-col col-12>
                         Logs:
-                        <p *ngFor="let log of logs">{{log}}</p>        
+                        <p *ngFor="let log of logs">{{log}}</p>
                     </ion-col>
                 </ion-row>
             </ion-grid>

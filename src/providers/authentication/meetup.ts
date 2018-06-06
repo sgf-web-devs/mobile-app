@@ -3,6 +3,8 @@ import { Http, Headers } from "@angular/http";
 import { InAppBrowser } from "@ionic-native/in-app-browser";
 import { Observable } from "rxjs/Observable";
 import 'rxjs/add/operator/map';
+import { HTTP, HTTPResponse } from '@ionic-native/http';
+import {HomePage} from "../../pages/home/home";
 //import 'rxjs/add/operator/toPromise';
 //import 'rxjs/add/operator/catch';
 
@@ -17,14 +19,15 @@ export class Meetup {
     browserUrl: any;
     baseUrl: string;
 
-    constructor(public http: Http, public iab: InAppBrowser) {
+    constructor(public http: Http, public httpNative: HTTP, public iab: InAppBrowser) {
         //OAuth
-        this.clientId = 'mabrcd406k0hhhe6gms84lfaq0';
+        //this.clientId = 'mabrcd406k0hhhe6gms84lfaq0';
+        this.clientId = 'n91gkbjmld10pjvn6eqctu0llb';
         this.redirectURI = 'http://localhost';
         this.url = 'https://secure.meetup.com/oauth2/authorize?scope=rsvp&client_id=' + this.clientId + '&response_type=token&redirect_uri=' + this.redirectURI;
 
         //Need these for running locally with only a web browser on port 8100
-        this.browserClientId = 'c6rhrufurnhhfl3e7nirenh9nl';
+        this.browserClientId = 'j3fc3fgc175tt820cr4j2jmhlq';
         this.browserRedirectURI = 'http://localhost:8100';
         this.browserUrl = 'https://secure.meetup.com/oauth2/authorize?scope=rsvp&client_id=' + this.browserClientId + '&response_type=token&redirect_uri=' + this.browserRedirectURI;
 
@@ -36,24 +39,33 @@ export class Meetup {
     }
 
     getUserInfo() {
-        let headers = new Headers();
+        let headers = {
+            'Authorization': 'Bearer ' + this.accessToken,
+            'Content-Type': 'application/json'
+        };
 
-        headers.append('Authorization', 'Bearer ' + this.accessToken);
-        headers.append('Content-Type', 'application/json');
-        return this.http.get(`${this.baseUrl}/2/member/self/`, { headers: headers }).map(res => res.json());
+
+        return this.httpNative.get(`${this.baseUrl}/2/member/self/`, {}, headers).then(res => JSON.parse(res.data));
     }
 
     getCurrentUserInfo(){
         let headers = new Headers();
         let memberV3Url = `${this.baseUrl}/members/self/?access_token=${this.accessToken}`;
-        return this.http.get(memberV3Url, { headers: headers }).map(res=>res);        
+
+        //return this.httpNative.get(memberV3Url, {}, {}).then(res=>res);
+
+        return new Promise(resolve => {
+            this.httpNative.get(memberV3Url, {}, {}).then(res=> {
+                resolve(JSON.parse(res.data));
+            });
+        })
     }
 
     rsvp(eventId, response){
         let headers = new Headers();
         let rsvpV3Url = `${this.baseUrl}/SGF-Web-Devs/events/${eventId}/rsvps?response=${response}&access_token=${this.accessToken}`;
 
-        let payload = { response }
+        let payload = { response };
         return this.http.post(rsvpV3Url, payload, {headers: headers}).map(res => {
             return res;
         });
@@ -75,24 +87,29 @@ export class Meetup {
     getLatestEvent(){
         let headers = new Headers();
         let eventsV3Url = `${this.baseUrl}/SGF-Web-Devs/events?scroll=recent_past&access_token=${this.accessToken}`;
-        return this.http.get(eventsV3Url, {headers: headers}).map(res => {
-            let events = res.json();
-            console.log('events:', events);
-            for(let event of events){
-                if(event.status != 'past'){
-                    return event;
+
+        return new Promise(resolve => {
+            this.httpNative.get(eventsV3Url, {}, {}).then(res=> {
+                let events = JSON.parse(res.data);
+
+                for(let event of events){
+                    if(event.status != 'past'){
+                        resolve(event);
+                        //console.log('events loop:', events);
+                    }
                 }
-            }
-            
-            return events[0];
-        });
+
+                console.log('events array', JSON.stringify(events[0]));
+                resolve(events[0]);
+            });
+        })
     }
 
     browserTokenOverride(token: string){
         return new Promise((resolve,reject) => {
             if(token && token.length > 0){
                 this.accessToken = token;
-                resolve();     
+                resolve();
             } else {
                 reject('invalid token');
             }
@@ -141,10 +158,12 @@ export class Meetup {
                 if (event.url.indexOf(this.redirectURI) > -1) {
                     listener.unsubscribe();
                     browser.close();
+                    console.log(event.url);
                     let token = event.url.split('=')[1].split('&')[0];
                     this.accessToken = token;
                     resolve(event.url);
-                    this.getUserInfo()
+                    this.getUserInfo();
+                    //this.navCtrl.setRoot(HomePage);
                 } else {
                     alert("Could not authenticate");
                     reject("Could not authenticate");

@@ -24,6 +24,7 @@ import { JsonpModule } from '@angular/http';
 import { IonicStorageModule } from '@ionic/storage';
 import { Meetup } from "../providers/authentication/meetup";
 import { WebDevs } from "../providers/webdevs/webdevs";
+import {HTTP} from "@ionic-native/http";
 
 @NgModule({
     declarations: [
@@ -38,6 +39,7 @@ import { WebDevs } from "../providers/webdevs/webdevs";
         BrowserModule,
         HttpModule,
         HttpClientModule,
+        //HTTP,
         JsonpModule,
         AngularFireModule.initializeApp(environment.firebase, 'sgf-web-devs-api'),
         AngularFireAuthModule,
@@ -59,6 +61,7 @@ import { WebDevs } from "../providers/webdevs/webdevs";
         StatusBar,
         SplashScreen,
         Geolocation,
+        HTTP,
         InAppBrowser,
         {provide: ErrorHandler, useClass: IonicErrorHandler},
         AttendeeProvider,
