@@ -59,7 +59,7 @@ export class HomePage implements OnInit {
         };
 
         this.getLatestMeetup();
-        //this.checkCheckIn();
+        this.checkCheckIn();
 
 
         this.attendeeProvier.getAttendees().subscribe(
