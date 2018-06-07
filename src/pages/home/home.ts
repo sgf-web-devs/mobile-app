@@ -5,8 +5,7 @@ import { AttendeeProvider } from './../../providers/attendee/attendee';
 import { PreCheckinPage } from '../pre-checkin/pre-checkin';
 import {AuthenticationProvider} from "../../providers/authentication/authentication";
 import { AngularFireDatabase } from 'angularfire2/database';
-import { Jsonp } from '@angular/http';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HTTP } from '@ionic-native/http';
 import 'rxjs/add/operator/map'
 import { Storage } from '@ionic/storage';
 import { Meetup } from '../../providers/authentication/meetup';
@@ -32,8 +31,7 @@ export class HomePage implements OnInit {
         private attendeeProvier: AttendeeProvider,
         public auth: AuthenticationProvider,
         private db: AngularFireDatabase,
-        private http:HttpClient,
-        private jsonp: Jsonp,
+        private http:HTTP,
         private storage: Storage,
         public plt: Platform,
         private meetup: Meetup,
@@ -111,17 +109,40 @@ export class HomePage implements OnInit {
     }
 
     checkIn(){
+        console.log("checking in", 1);
         //let url = 'https://admin.sgfwebdevs.com/api/checkin';
         let url = "https://requestbin.fullcontact.com/15i80oe1";
-
+        console.log("checking in", 2);
         let checkinData = {
             email: this.currentUser.email,
             name: this.currentUser.name,
             image: this.currentUser.photo.photo_link
         };
+        console.log("checking in", 3);
+
+        try{
+            this.http.get(url, {}, {})
+                .then(data => {
+
+                    console.log(data.status);
+                    console.log(data.data); // data received by server
+                    console.log(data.headers);
+
+                })
+                .catch(error => {
+
+                    console.log(error.status);
+                    console.log(error.error); // error message as string
+                    console.log(error.headers);
+
+                });
+        } catch(e){
+            console.log("checking in", e);
+        }
 
 
-        this.http.get(url).map(res => res);
+
+        console.log("checking in", 5);
 
         this.webdevs.checkin(this.currentUser).then(goodCheckIn => {
             this.log('check response:', goodCheckIn);
