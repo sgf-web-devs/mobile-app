@@ -79,8 +79,7 @@ export class LoginPage implements OnInit {
             this.meetup.login().then((success) => {
                 let successToken = success.toString().split('=')[1].split('&')[0];
                 if(successToken) {
-                    //this.meetup.accessToken = successToken;
-                    this.meetup.accessToken = 'de7b8f1bd5496ec26904053320c12d18';
+                    this.meetup.accessToken = successToken;
                     this.navCtrl.setRoot(HomePage);
                 }
                 //this.navCtrl.setRoot(HomePage);

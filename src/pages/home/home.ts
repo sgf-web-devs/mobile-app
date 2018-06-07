@@ -59,7 +59,7 @@ export class HomePage implements OnInit {
         };
 
         this.getLatestMeetup();
-        this.checkCheckIn();
+        //this.checkCheckIn();
         this.initPushNotifications();
 
         this.attendeeProvier.getAttendees().subscribe(
@@ -67,6 +67,7 @@ export class HomePage implements OnInit {
         );
         this.meetup.getCurrentUserInfo().then(
             userData => {
+                console.log(userData);
                 this.currentUser = userData;
                 this.log('current user: ', this.currentUser);
                 //this.checkRsvp();
