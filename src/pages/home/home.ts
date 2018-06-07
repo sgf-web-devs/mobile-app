@@ -109,40 +109,6 @@ export class HomePage implements OnInit {
     }
 
     checkIn(){
-        console.log("checking in", 1);
-        //let url = 'https://admin.sgfwebdevs.com/api/checkin';
-        let url = "https://requestbin.fullcontact.com/15i80oe1";
-        console.log("checking in", 2);
-        let checkinData = {
-            email: this.currentUser.email,
-            name: this.currentUser.name,
-            image: this.currentUser.photo.photo_link
-        };
-        console.log("checking in", 3);
-
-        try{
-            this.http.get(url, {}, {})
-                .then(data => {
-
-                    console.log(data.status);
-                    console.log(data.data); // data received by server
-                    console.log(data.headers);
-
-                })
-                .catch(error => {
-
-                    console.log(error.status);
-                    console.log(error.error); // error message as string
-                    console.log(error.headers);
-
-                });
-        } catch(e){
-            console.log("checking in", e);
-        }
-
-
-
-        console.log("checking in", 5);
 
         this.webdevs.checkin(this.currentUser).then(goodCheckIn => {
             this.log('check response:', goodCheckIn);
