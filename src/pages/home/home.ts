@@ -60,7 +60,7 @@ export class HomePage implements OnInit {
 
         this.getLatestMeetup();
         //this.checkCheckIn();
-        this.initPushNotifications();
+
 
         this.attendeeProvier.getAttendees().subscribe(
             attendees => this.attendees = attendees,
@@ -70,6 +70,7 @@ export class HomePage implements OnInit {
                 console.log(userData);
                 this.currentUser = userData;
                 this.log('current user: ', this.currentUser);
+                this.initPushNotifications();
                 //this.checkRsvp();
             }, err => {
                 this.log('error getting User info', err);
@@ -239,6 +240,8 @@ export class HomePage implements OnInit {
                 .startInit("0b60a144-1ecf-4903-8c16-76bec9905e8f", "673684652707")
                 .handleNotificationOpened(notificationOpenedCallback)
                 .endInit();
+
+            window["plugins"].OneSignal.sendTag('email', this.currentUser.email);
         }
 
         if(this.plt.is('ios')) {
@@ -246,6 +249,8 @@ export class HomePage implements OnInit {
                 .startInit("0b60a144-1ecf-4903-8c16-76bec9905e8f")
                 .handleNotificationOpened(notificationOpenedCallback)
                 .endInit();
+
+            window["plugins"].OneSignal.sendTag('email', this.currentUser.email);
         }
     }
 }
