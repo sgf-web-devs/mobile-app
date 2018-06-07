@@ -1,6 +1,6 @@
 {
   "name": "sgf_mobile_app",
-  "app_id": "",
+  "app_id": "37afdcd4",
   "type": "ionic-angular",
   "integrations": {
     "cordova": {}

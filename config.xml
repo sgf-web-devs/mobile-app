@@ -77,15 +77,18 @@
         <splash height="2732" src="resources/ios/splash/Default@2x~universal~anyany.png" width="2732" />
     </platform>
     <allow-navigation href="http://192.168.1.145:8100" />
-    <engine name="android" spec="6.3.0" />
+    <allow-navigation href="http://10.12.69.9:8100" />
     <engine name="ios" spec="4.5.4" />
+    <engine name="android" spec="6.3.0" />
     <plugin name="ionic-plugin-keyboard" spec="^2.2.1" />
     <plugin name="cordova-plugin-whitelist" spec="^1.3.3" />
     <plugin name="cordova-plugin-device" spec="^1.1.7" />
     <plugin name="cordova-plugin-splashscreen" spec="^4.1.0" />
     <plugin name="cordova-plugin-ionic-webview" spec="^1.1.16" />
     <plugin name="cordova-plugin-geolocation" spec="^3.0.0" />
-    <plugin name="cordova-sqlite-storage" spec="^2.2.1" />
-    <plugin name="onesignal-cordova-plugin" spec="^2.3.1" />
-    <plugin name="cordova-plugin-statusbar" spec="~2.2.3" />
+    <plugin name="cordova-sqlite-storage" spec="^2.3.0" />
+    <plugin name="onesignal-cordova-plugin" spec="^2.3.2" />
+    <plugin name="cordova-plugin-statusbar" spec="^2.2.3" />
+    <plugin name="cordova-plugin-inappbrowser" spec="^2.0.2" />
+    <plugin name="cordova-plugin-advanced-http" spec="^1.11.1" />
 </widget>

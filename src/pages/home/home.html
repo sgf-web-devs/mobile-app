@@ -3,12 +3,15 @@
     <ion-list scrollY="true" no-lines>
         <ion-item class="user" color="grey-dark">
             <ion-avatar item-start>
-                <img src="assets/imgs/profile.jpg">
+                <img *ngIf="!currentUser" src="assets/imgs/profile.jpg">
+                <img *ngIf="currentUser" [src]="currentUser.photo.thumb_link">
             </ion-avatar>
 
-            <h1 *ngIf="auth.user">{{ auth.user.displayName }}</h1>
+            <h1 *ngIf="currentUser">{{ currentUser.name }}</h1>
+
             <button ion-button block outline color="light" (click)="checkIn()" *ngIf="allowedToCheckin()">Check in</button>
-            <button ion-button block outline color="light" (click)="openNextEventInBrowser(latestMeetup.link)" *ngIf="showRsvpLink()">RSVP For The Next Meetup</button>
+            <!--<button ion-button block outline color="light" (click)="rsvp(latestMeetup.id)" *ngIf="showRsvpLink()">RSVP For The Next Meetup</button>-->
+            <!--<button ion-button block outline color="danger" (click)="cancelRsvp(latestMeetup.id)" *ngIf="showCancelRsvp()">Cancel RSVP</button>-->
             <h3 *ngIf="checkedIn" text-wrap>You are checked in. Grab some pizza and enjoy the night!</h3>
         </ion-item>
 
@@ -19,7 +22,7 @@
                         <h3>{{ latestMeetup.name }}</h3>
                     </ion-col>
                     <ion-col col-2>
-                        <p class="date">{{ formatDate(latestMeetup.local_date) }}</p>
+                        <p class="date">{{ formatDate(latestMeetup.time) }}</p>
                     </ion-col>
                 </ion-row>
                 <ion-row>
@@ -36,6 +39,16 @@
                 <ion-row text-right>
                     <ion-col col-12>
                         <div>...Show More</div>
+                    </ion-col>
+                </ion-row>
+            </ion-grid>
+        </ion-item>
+        <ion-item *ngIf="logging">
+            <ion-grid>
+                <ion-row>
+                    <ion-col col-12>
+                        Logs:
+                        <p *ngFor="let log of logs">{{log}}</p>
                     </ion-col>
                 </ion-row>
             </ion-grid>

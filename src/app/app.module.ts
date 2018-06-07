@@ -1,8 +1,10 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { ErrorHandler, NgModule } from '@angular/core';
+import { HttpModule } from "@angular/http";
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
+import { InAppBrowser } from "@ionic-native/in-app-browser";
 import { AngularFireModule } from 'angularfire2';
 import { AngularFireAuthModule } from 'angularfire2/auth';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
@@ -21,6 +23,9 @@ import { AuthenticationProvider } from '../providers/authentication/authenticati
 import { HttpClientModule } from "@angular/common/http";
 import { JsonpModule } from '@angular/http';
 import { IonicStorageModule } from '@ionic/storage';
+import { Meetup } from "../providers/authentication/meetup";
+import { WebDevs } from "../providers/webdevs/webdevs";
+import {HTTP} from "@ionic-native/http";
 
 @NgModule({
     declarations: [
@@ -34,7 +39,9 @@ import { IonicStorageModule } from '@ionic/storage';
     ],
     imports: [
         BrowserModule,
+        HttpModule,
         HttpClientModule,
+        //HTTP,
         JsonpModule,
         AngularFireModule.initializeApp(environment.firebase, 'sgf-web-devs-api'),
         AngularFireAuthModule,
@@ -52,9 +59,13 @@ import { IonicStorageModule } from '@ionic/storage';
         MeetupLoginButtonComponent
     ],
     providers: [
+        Meetup,
+        WebDevs,
         StatusBar,
         SplashScreen,
         Geolocation,
+        HTTP,
+        InAppBrowser,
         {provide: ErrorHandler, useClass: IonicErrorHandler},
         AttendeeProvider,
         AuthenticationProvider
