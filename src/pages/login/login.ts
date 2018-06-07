@@ -5,6 +5,8 @@ import { HomePage } from "../home/home";
 import { AuthenticationProvider } from "../../providers/authentication/authentication";
 import { Storage } from '@ionic/storage';
 import { Meetup } from "../../providers/authentication/meetup";
+import {Http} from "@angular/http";
+import {HTTP} from "@ionic-native/http";
 
 
 /**
@@ -31,6 +33,8 @@ export class LoginPage implements OnInit {
         public plt: Platform,
         public storage: Storage,
         public meetup: Meetup,
+        public http: Http,
+        public httpNative: HTTP
     ) {
 
     }

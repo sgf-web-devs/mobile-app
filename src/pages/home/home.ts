@@ -53,11 +53,6 @@ export class HomePage implements OnInit {
     }
 
     ngOnInit() {
-        this.currentUser = {
-            name: 'Myke Bates',
-            photo: 'assets/imgs/profile.jpg'
-        };
-
         this.getLatestMeetup();
         this.checkCheckIn();
 
@@ -142,7 +137,7 @@ export class HomePage implements OnInit {
         let today = new Date();
         let meetupDate = new Date(date);
         let checkinClose = meetupDate.getHours() + 4;
-        let checkinOpen = meetupDate.getHours() - 4;
+        let checkinOpen = meetupDate.getHours() - 1;
 
         if(today.getDay() == meetupDate.getDay() && today.getMonth() == meetupDate.getMonth()) {
             if(today.getHours() >= checkinOpen && today.getHours() <= checkinClose) {
@@ -150,7 +145,8 @@ export class HomePage implements OnInit {
             }
         }
 
-        return false;
+        //return false;
+        return true;
     }
 
     rsvp(eventId){
