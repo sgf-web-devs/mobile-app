@@ -145,8 +145,8 @@ export class HomePage implements OnInit {
             }
         }
 
-        //return false;
-        return true;
+        return false;
+        //return true;
     }
 
     rsvp(eventId){

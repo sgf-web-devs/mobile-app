@@ -22,17 +22,29 @@
         </header>
 
 
-        <div class="cta">
-            <img src="assets/imgs/github-button.svg" alt="Login" (click)="login()">
-        </div>
-        <div class="cta" *ngIf="!isApp">
-            <label for="token_override" style="color: white;">Token:</label>
-            <input id="token_override" type="text" [(ngModel)]="token"/>
-            <button ion-button (click)="loginOverride()">Go</button>
-            <button ion-button full color="danger" (click)="clearLocal()">Clear Cache</button>
-        </div>
+        <!--<div class="cta" *ngIf="isApp">-->
+            <!--<label for="token_override" style="color: white;">Token:</label>-->
+            <!--<input id="token_override" type="text" [(ngModel)]="token"/>-->
+            <!--<button ion-button (click)="loginOverride()">Go</button>-->
+            <!--<button ion-button full color="danger" (click)="clearLocal()">Clear Cache</button>-->
+        <!--</div>-->
 
-        <meetup-login-button></meetup-login-button>
+        <meetup-login-button (click)="login()"></meetup-login-button>
+
+        <ion-list>
+
+            <ion-item>
+                <a href="#" (click)="doAlert()">Giveaway Rules</a>
+                <!--<button ion-button block (click)="doAlert()">Basic Alert</button>-->
+                <!--<ion-label>Give</ion-label>-->
+                <!--<ion-checkbox [(ngModel)]="terms"></ion-checkbox>-->
+            </ion-item>
+
+            <!--<ion-item style="text-align: center">-->
+                <!--<ion-label>I agree to the terms <a href="#">And conditions</a></ion-label>-->
+            <!--</ion-item>-->
+
+        </ion-list>
 
         <footer>
             Web Dev Community in Springfield, MO

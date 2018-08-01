@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {IonicPage, NavController, NavParams, Platform, LoadingController} from 'ionic-angular';
+import {IonicPage, NavController, NavParams, Platform, LoadingController, AlertController} from 'ionic-angular';
 
 import { HomePage } from "../home/home";
 import { AuthenticationProvider } from "../../providers/authentication/authentication";
@@ -25,6 +25,7 @@ export class LoginPage implements OnInit {
     loginChange: any;
     isApp: boolean;
     token: string;
+    terms: boolean;
 
     constructor(
         public navCtrl: NavController,
@@ -34,9 +35,10 @@ export class LoginPage implements OnInit {
         public storage: Storage,
         public meetup: Meetup,
         public http: Http,
-        public httpNative: HTTP
+        public httpNative: HTTP,
+        public alertCtrl: AlertController
     ) {
-
+        this.terms = true;
     }
 
     ngOnInit() {
@@ -48,6 +50,22 @@ export class LoginPage implements OnInit {
 
         // this.loginChange = this.auth.getLoginChangeEmitter()
         //     .subscribe(user => this.onLoginChange(user));
+    }
+
+    doAlert() {
+        var message = "The rules are simple. Check-in to enter and be physically present during winner selection. Prizes are from affiliates and sponsors of SGF Web Devs - Apple is not involved in any way with giveaways.";
+
+        if(this.plt.is('android')) {
+            message = message.replace('Apple', 'Google');
+        }
+
+        let alert = this.alertCtrl.create({
+            title: 'Giveaway Rules',
+            subTitle: message,
+            buttons: ['Ok']
+        });
+
+        alert.present();
     }
 
     onLoginChange(user:any){
