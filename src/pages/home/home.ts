@@ -6,8 +6,8 @@ import { AuthenticationProvider } from "../../providers/authentication/authentic
 import { AngularFireDatabase } from 'angularfire2/database';
 import 'rxjs/add/operator/map'
 import { Storage } from '@ionic/storage';
-import { Meetup } from '../../providers/authentication/meetup';
-import { WebDevs } from '../../providers/webdevs/webdevs';
+import { MeetupApi } from '../../providers/authentication/meetup-api.service';
+import { WebDevsApi } from '../../providers/webdevs/web-devs-api.service';
 
 @Component({
     selector: 'page-home',
@@ -31,8 +31,8 @@ export class HomePage implements OnInit {
         private db: AngularFireDatabase,
         private storage: Storage,
         public plt: Platform,
-        private meetup: Meetup,
-        private webdevs: WebDevs
+        private meetup: MeetupApi,
+        private webdevs: WebDevsApi
     ) {
         this.logs = [];
         this.logging = false;

@@ -23,8 +23,8 @@ import { AuthenticationProvider } from '../providers/authentication/authenticati
 import { HttpClientModule } from "@angular/common/http";
 import { JsonpModule } from '@angular/http';
 import { IonicStorageModule } from '@ionic/storage';
-import { Meetup } from "../providers/authentication/meetup";
-import { WebDevs } from "../providers/webdevs/webdevs";
+import { MeetupApi } from "../providers/authentication/meetup-api.service";
+import { WebDevsApi } from "../providers/webdevs/web-devs-api.service";
 import {HTTP} from "@ionic-native/http";
 
 @NgModule({
@@ -59,8 +59,8 @@ import {HTTP} from "@ionic-native/http";
         MeetupLoginButtonComponent
     ],
     providers: [
-        Meetup,
-        WebDevs,
+        MeetupApi,
+        WebDevsApi,
         StatusBar,
         SplashScreen,
         Geolocation,

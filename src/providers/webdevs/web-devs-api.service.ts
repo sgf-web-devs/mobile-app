@@ -3,7 +3,7 @@ import 'rxjs/add/operator/map';
 import { HTTP } from "@ionic-native/http";
 
 @Injectable()
-export class WebDevs {
+export class WebDevsApi {
 
     constructor(public http: HTTP) {
 
