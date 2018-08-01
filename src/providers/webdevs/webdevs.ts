@@ -1,8 +1,6 @@
 import { Injectable } from "@angular/core";
-import { InAppBrowser } from "@ionic-native/in-app-browser";
-import { Observable } from "rxjs/Observable";
 import 'rxjs/add/operator/map';
-import {HTTP} from "@ionic-native/http";
+import { HTTP } from "@ionic-native/http";
 
 @Injectable()
 export class WebDevs {

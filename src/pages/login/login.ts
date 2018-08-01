@@ -1,12 +1,11 @@
-import {Component, OnInit} from '@angular/core';
-import {IonicPage, NavController, NavParams, Platform, LoadingController, AlertController} from 'ionic-angular';
+import { Component, OnInit } from '@angular/core';
+import { IonicPage, NavController, NavParams, Platform, AlertController } from 'ionic-angular';
 
 import { HomePage } from "../home/home";
 import { AuthenticationProvider } from "../../providers/authentication/authentication";
 import { Storage } from '@ionic/storage';
 import { Meetup } from "../../providers/authentication/meetup";
-import {Http} from "@angular/http";
-import {HTTP} from "@ionic-native/http";
+import { Http } from "@angular/http";
 
 
 /**
@@ -35,7 +34,6 @@ export class LoginPage implements OnInit {
         public storage: Storage,
         public meetup: Meetup,
         public http: Http,
-        public httpNative: HTTP,
         public alertCtrl: AlertController
     ) {
         this.terms = true;
@@ -55,7 +53,7 @@ export class LoginPage implements OnInit {
     doAlert() {
         var message = "The rules are simple. Check-in to enter and be physically present during winner selection. Prizes are from affiliates and sponsors of SGF Web Devs - Apple is not involved in any way with giveaways.";
 
-        if(this.plt.is('android')) {
+        if (this.plt.is('android')) {
             message = message.replace('Apple', 'Google');
         }
 
@@ -68,10 +66,11 @@ export class LoginPage implements OnInit {
         alert.present();
     }
 
-    onLoginChange(user:any){
-        if(user){
+    onLoginChange(user: any) {
+        if (user) {
             console.log(JSON.stringify(this.auth.user.displayName));
-            this.navCtrl.setRoot(HomePage).then(() =>{});
+            this.navCtrl.setRoot(HomePage).then(() => {
+            });
             //this.navCtrl.push(HomePage);
         }
     }
@@ -79,28 +78,28 @@ export class LoginPage implements OnInit {
     ionViewDidLoad() {
         console.log('ionViewDidLoad LoginPage');
 
-        if(this.plt.is('core') || this.plt.is('mobileweb')) {
+        if (this.plt.is('core') || this.plt.is('mobileweb')) {
             this.isApp = false;
         } else {
             this.isApp = true;
         }
     }
 
-    loginOverride(){
-        this.meetup.browserTokenOverride(this.token).then(()=>{
+    loginOverride() {
+        this.meetup.browserTokenOverride(this.token).then(() => {
             this.navCtrl.setRoot(HomePage);
         });
     }
 
-    clearLocal(){
+    clearLocal() {
         this.storage.clear();
     }
 
-    login(){
-        if(this.isApp){
+    login() {
+        if (this.isApp) {
             this.meetup.login().then((success) => {
                 let successToken = success.toString().split('=')[1].split('&')[0];
-                if(successToken) {
+                if (successToken) {
                     this.meetup.accessToken = successToken;
                     this.navCtrl.setRoot(HomePage);
                 }

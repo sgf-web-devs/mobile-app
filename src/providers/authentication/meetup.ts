@@ -1,12 +1,9 @@
 import { Injectable } from "@angular/core";
 import { Http, Headers } from "@angular/http";
 import { InAppBrowser } from "@ionic-native/in-app-browser";
-import { Observable } from "rxjs/Observable";
 import 'rxjs/add/operator/map';
-import { HTTP, HTTPResponse } from '@ionic-native/http';
-import {HomePage} from "../../pages/home/home";
-//import 'rxjs/add/operator/toPromise';
-//import 'rxjs/add/operator/catch';
+import { HTTP } from '@ionic-native/http';
+
 
 @Injectable()
 export class Meetup {
@@ -48,52 +45,52 @@ export class Meetup {
         return this.httpNative.get(`${this.baseUrl}/2/member/self/`, {}, headers).then(res => JSON.parse(res.data));
     }
 
-    getCurrentUserInfo(){
-        let headers = new Headers();
+    getCurrentUserInfo() {
         let memberV3Url = `${this.baseUrl}/members/self/?access_token=${this.accessToken}`;
 
         //return this.httpNative.get(memberV3Url, {}, {}).then(res=>res);
 
         return new Promise(resolve => {
-            this.httpNative.get(memberV3Url, {}, {}).then(res=> {
+            this.httpNative.get(memberV3Url, {}, {}).then(res => {
                 resolve(JSON.parse(res.data));
             });
         })
     }
 
-    rsvp(eventId, response){
+    rsvp(eventId, response) {
         let headers = new Headers();
         let rsvpV3Url = `${this.baseUrl}/SGF-Web-Devs/events/${eventId}/rsvps?response=${response}&access_token=${this.accessToken}`;
 
         let payload = { response };
-        return this.http.post(rsvpV3Url, payload, {headers: headers}).map(res => {
+        return this.http.post(rsvpV3Url, payload, { headers: headers }).map(res => {
             return res;
         });
     }
-    checkRSVP(eventId, userId){
+
+    checkRSVP(eventId, userId) {
         let headers = new Headers();
         let rsvpV3Url = `${this.baseUrl}/SGF-Web-Devs/events/${eventId}/rsvps?&access_token=${this.accessToken}`;
         console.log('checking rsvp for ', eventId);
-        return this.http.get(rsvpV3Url, {headers: headers}).map(res => {
+        return this.http.get(rsvpV3Url, { headers: headers }).map(res => {
             let rsvps = res.json();
-            for(let rsvp of rsvps){
-                if(rsvp.member.id === userId){
+            for (let rsvp of rsvps) {
+                if (rsvp.member.id === userId) {
                     return true;
                 }
             }
             return false;
         });
     }
-    getLatestEvent(){
-        let headers = new Headers();
+
+    getLatestEvent() {
         let eventsV3Url = `${this.baseUrl}/SGF-Web-Devs/events?scroll=recent_past&access_token=${this.accessToken}`;
 
         return new Promise(resolve => {
-            this.httpNative.get(eventsV3Url, {}, {}).then(res=> {
+            this.httpNative.get(eventsV3Url, {}, {}).then(res => {
                 let events = JSON.parse(res.data);
 
-                for(let event of events){
-                    if(event.status != 'past'){
+                for (let event of events) {
+                    if (event.status != 'past') {
                         resolve(event);
                         //console.log('events loop:', events);
                     }
@@ -105,9 +102,9 @@ export class Meetup {
         })
     }
 
-    browserTokenOverride(token: string){
-        return new Promise((resolve,reject) => {
-            if(token && token.length > 0){
+    browserTokenOverride(token: string) {
+        return new Promise((resolve, reject) => {
+            if (token && token.length > 0) {
                 this.accessToken = token;
                 resolve();
             } else {
@@ -116,7 +113,7 @@ export class Meetup {
         });
     }
 
-    browserLogin(){
+    browserLogin() {
         this.iab.create(this.browserUrl, '_blank');
     }
 
