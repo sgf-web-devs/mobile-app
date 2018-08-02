@@ -19,7 +19,7 @@ import { Http } from "@angular/http";
     selector: 'page-login',
     templateUrl: 'login.html',
 })
-export class LoginPage  {
+export class LoginPage {
     loginChange: any;
     isApp: boolean;
     token: string;
@@ -35,6 +35,11 @@ export class LoginPage  {
         public alertCtrl: AlertController
     ) {
 
+        this.meetupApi.getAccessToken().then(val => {
+            if(!val) return;
+
+            this.navigateToHome();
+        });
     }
 
     showGiveAwayAlert() {
@@ -53,6 +58,10 @@ export class LoginPage  {
         });
 
         alert.present();
+    }
+
+    navigateToHome() {
+        this.navCtrl.setRoot(HomePage);
     }
 
     ionViewDidLoad() {
@@ -75,7 +84,7 @@ export class LoginPage  {
 
     login() {
         this.meetupApi.login().then(success => {
-            this.navCtrl.setRoot(HomePage);
+            this.navigateToHome();
         }).catch(error => {
             console.log('login page', error)
         })

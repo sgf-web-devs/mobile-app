@@ -1,49 +1,57 @@
 import { Injectable } from "@angular/core";
-import { Http, Headers } from "@angular/http";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { InAppBrowser } from "@ionic-native/in-app-browser";
 import 'rxjs/add/operator/map';
 import { HTTP } from '@ionic-native/http';
 import { Platform } from "ionic-angular";
 import { Meetup } from "ng2-cordova-oauth/core";
+import { Storage } from '@ionic/storage';
 import { OauthBrowser } from "ng2-cordova-oauth/platform/browser";
 import { OauthCordova } from "ng2-cordova-oauth/platform/cordova";
 
 
 @Injectable()
 export class MeetupApi {
-    accessToken: any;
-    clientId: any;
-    redirectURI: any;
-    url: any;
-    browserClientId: any;
-    browserRedirectURI: any;
-    browserUrl: any;
-    baseUrl: 'https://api.meetup.com';
+    private accessToken: any;
+    private baseUrl = 'https://api.meetup.com';
+    private tokenStorageKey = 'meetup-access-token';
     private cordovaMeetupClientId = 'n91gkbjmld10pjvn6eqctu0llb';
     private browserMeetupClientId = 'j3fc3fgc175tt820cr4j2jmhlq';
     private oauth: OauthCordova | OauthBrowser;
     private meetupProvider: Meetup;
 
     constructor(
-        public http: Http,
+        public http: HttpClient,
         public httpNative: HTTP,
         public iab: InAppBrowser,
-        private platform: Platform
+        private platform: Platform,
+        private storage: Storage,
     ) {
-        let clientId = '';
-        if(this.platform.is('core') || this.platform.is('mobileweb')) {
+        if (this.platform.is('core') || this.platform.is('mobileweb')) {
             this.oauth = new OauthBrowser();
-            clientId = this.browserMeetupClientId;
+            this.meetupProvider = new Meetup({
+                clientId: this.browserMeetupClientId,
+                redirectUri: 'http://localhost:8100'
+            });
         } else {
             this.oauth = new OauthCordova();
-            clientId = this.cordovaMeetupClientId;
+            this.meetupProvider = new Meetup({ clientId: this.cordovaMeetupClientId });
+
         }
 
-        this.meetupProvider = new Meetup({ clientId });
+        this.storage.get(this.tokenStorageKey).then(val => {
+            this.setAccessToken(val);
+        })
     }
+
 
     setAccessToken(token) {
         this.accessToken = token;
+        this.storage.set(this.tokenStorageKey, token);
+    }
+
+    getAccessToken() {
+        return this.storage.get(this.tokenStorageKey);
     }
 
     getUserInfo() {
@@ -60,17 +68,13 @@ export class MeetupApi {
     getCurrentUserInfo() {
         let memberV3Url = `${this.baseUrl}/members/self/?access_token=${this.accessToken}`;
 
-        //return this.httpNative.get(memberV3Url, {}, {}).then(res=>res);
+        console.log(memberV3Url);
 
-        return new Promise(resolve => {
-            this.httpNative.get(memberV3Url, {}, {}).then(res => {
-                resolve(JSON.parse(res.data));
-            });
-        })
+        return this.http.get(memberV3Url);
     }
 
     rsvp(eventId, response) {
-        let headers = new Headers();
+        let headers = new HttpHeaders();
         let rsvpV3Url = `${this.baseUrl}/SGF-Web-Devs/events/${eventId}/rsvps?response=${response}&access_token=${this.accessToken}`;
 
         let payload = { response };
@@ -79,10 +83,10 @@ export class MeetupApi {
     }
 
     checkRSVP(eventId, userId) {
-        let headers = new Headers();
+        let headers = new HttpHeaders();
         let rsvpV3Url = `${this.baseUrl}/SGF-Web-Devs/events/${eventId}/rsvps?&access_token=${this.accessToken}`;
         console.log('checking rsvp for ', eventId);
-        return this.http.get(rsvpV3Url, { headers: headers }).map(res => {
+        return this.http.get(rsvpV3Url, { headers: headers }).map((res: any) => {
             let rsvps = res.json();
             for (let rsvp of rsvps) {
                 if (rsvp.member.id === userId) {
@@ -97,17 +101,16 @@ export class MeetupApi {
         let eventsV3Url = `${this.baseUrl}/SGF-Web-Devs/events?scroll=recent_past&access_token=${this.accessToken}`;
 
         return new Promise(resolve => {
-            this.httpNative.get(eventsV3Url, {}, {}).then(res => {
-                let events = JSON.parse(res.data);
+            this.http.get(eventsV3Url,).subscribe((res: any[]) => {
+                let events = res;
+                console.log(events);
 
                 for (let event of events) {
                     if (event.status != 'past') {
                         resolve(event);
-                        //console.log('events loop:', events);
                     }
                 }
 
-                console.log('events array', JSON.stringify(events[0]));
                 resolve(events[0]);
             });
         })
@@ -126,23 +129,21 @@ export class MeetupApi {
 
     login() {
         return new Promise((resolve, reject) => {
-            try {
-                this.platform.ready().then(() => {
-                    this.oauth.logInVia(this.meetupProvider).then((success: any) => {
-                        this.accessToken = success.access_token;
-                        resolve(success);
-                    })
+            this.platform.ready().then(() => {
+
+                if(this.accessToken) {
+                    resolve();
+                    return;
+                }
+
+                this.oauth.logInVia(this.meetupProvider).then((success: any) => {
+                    this.setAccessToken(success.access_token);
+                    resolve();
+                })
                     .catch(error => {
-                        console.log('loginVia error', error);
                         reject(error);
                     });
-                });
-            } catch(err) {
-                console.log(err);
-                reject(err);
-            }
+            });
         });
-
-
     }
 }

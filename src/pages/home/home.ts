@@ -48,19 +48,17 @@ export class HomePage implements OnInit {
         this.checkCheckIn();
 
 
-        this.attendeeProvier.getAttendees().subscribe(
-            attendees => this.attendees = attendees,
-        );
-        this.meetup.getCurrentUserInfo().then(
-            userData => {
-                console.log(userData);
-                this.currentUser = userData;
-                this.log('current user: ', this.currentUser);
-                this.initPushNotifications();
-                //this.checkRsvp();
-            }, err => {
-                this.log('error getting User info', err);
-            });
+        // this.attendeeProvier.getAttendees().subscribe(
+        //     attendees => this.attendees = attendees,
+        // );
+
+        this.meetup.getCurrentUserInfo().subscribe(userData => {
+            this.currentUser = userData;
+            this.initPushNotifications();
+            //this.checkRsvp();
+        }, err => {
+            this.log('error getting User info', err);
+        });
     }
 
 
@@ -80,15 +78,10 @@ export class HomePage implements OnInit {
     }
 
     getLatestMeetup() {
-
-        //let hey = this.meetup.getLatestEvent();
-        //console.log(hey);
-        //this.latestMeetup = hey;
         this.meetup.getLatestEvent().then(
             latestEvent => {
                 this.log('latestEvent: ', latestEvent);
                 this.latestMeetup = latestEvent;
-                //this.checkRsvp();
             },
             err => {
                 this.log('error getting latest meetup info', err);
