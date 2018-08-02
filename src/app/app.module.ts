@@ -1,26 +1,23 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { ErrorHandler, NgModule } from '@angular/core';
-import { HttpModule } from "@angular/http";
+import { HttpClientModule } from "@angular/common/http";
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
 import { InAppBrowser } from "@ionic-native/in-app-browser";
+import { Geolocation } from '@ionic-native/geolocation';
+import { IonicStorageModule } from '@ionic/storage';
 
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
 import { LoginPage } from "../pages/login/login";
-import { CheckInPage } from './../pages/check-in/check-in';
-import { Geolocation } from '@ionic-native/geolocation';
+import { CheckInPage } from '../pages/check-in/check-in';
 import { AttendeeListItemComponent } from "../components/attendee-list-item/attendee-list-item";
-import { MeetupLoginButtonComponent } from './../components/meetup-login-button/meetup-login-button';
+import { MeetupLoginButtonComponent } from '../components/meetup-login-button/meetup-login-button';
 import { AttendeeProvider } from '../providers/attendee/attendee';
 import { PreCheckinPage } from '../pages/pre-checkin/pre-checkin';
-import { HttpClientModule } from "@angular/common/http";
-import { JsonpModule } from '@angular/http';
-import { IonicStorageModule } from '@ionic/storage';
 import { MeetupApi } from "../providers/authentication/meetup-api.service";
 import { WebDevsApi } from "../providers/webdevs/web-devs-api.service";
-import {HTTP} from "@ionic-native/http";
 
 @NgModule({
     declarations: [
@@ -34,10 +31,7 @@ import {HTTP} from "@ionic-native/http";
     ],
     imports: [
         BrowserModule,
-        HttpModule,
         HttpClientModule,
-        //HTTP,
-        JsonpModule,
         IonicModule.forRoot(MyApp),
         IonicStorageModule.forRoot()
     ],
@@ -56,11 +50,9 @@ import {HTTP} from "@ionic-native/http";
         StatusBar,
         SplashScreen,
         Geolocation,
-        HTTP,
         InAppBrowser,
         {provide: ErrorHandler, useClass: IonicErrorHandler},
         AttendeeProvider,
     ]
 })
-export class AppModule {
-}
+export class AppModule { }

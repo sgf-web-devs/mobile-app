@@ -1,11 +1,10 @@
 import { Injectable } from "@angular/core";
-import 'rxjs/add/operator/map';
-import { HTTP } from "@ionic-native/http";
+import { HttpClient } from "@angular/common/http";
 
 @Injectable()
 export class WebDevsApi {
 
-    constructor(public http: HTTP) {
+    constructor(public http: HttpClient) {
 
     }
 
@@ -19,8 +18,8 @@ export class WebDevsApi {
                 image: userData.photo.photo_link
             };
 
-            this.http.post(url, checkinData, {}).then(res => {
-                resolve(res.data);
+            this.http.post(url, checkinData, {}).subscribe(res => {
+                resolve(res);
             });
         });
     }

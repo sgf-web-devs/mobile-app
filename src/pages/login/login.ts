@@ -4,7 +4,7 @@ import { IonicPage, NavController, NavParams, Platform, AlertController } from '
 import { HomePage } from "../home/home";
 import { Storage } from '@ionic/storage';
 import { MeetupApi } from "../../providers/authentication/meetup-api.service";
-import { Http } from "@angular/http";
+import { HttpClient } from "@angular/common/http";
 
 
 /**
@@ -31,7 +31,7 @@ export class LoginPage {
         public plt: Platform,
         public storage: Storage,
         public meetupApi: MeetupApi,
-        public http: Http,
+        public http: HttpClient,
         public alertCtrl: AlertController
     ) {
 
@@ -43,7 +43,7 @@ export class LoginPage {
     }
 
     showGiveAwayAlert() {
-        var message = "The rules are simple. Check-in to enter and be physically present during winner selection. "
+        let message = "The rules are simple. Check-in to enter and be physically present during winner selection. "
             + "Prizes are from affiliates and sponsors of SGF Web Devs "
             + "- Apple is not involved in any way with giveaways.";
 

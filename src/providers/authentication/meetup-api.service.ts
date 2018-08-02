@@ -2,7 +2,6 @@ import { Injectable } from "@angular/core";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { InAppBrowser } from "@ionic-native/in-app-browser";
 import 'rxjs/add/operator/map';
-import { HTTP } from '@ionic-native/http';
 import { Platform } from "ionic-angular";
 import { Meetup } from "ng2-cordova-oauth/core";
 import { Storage } from '@ionic/storage';
@@ -22,7 +21,6 @@ export class MeetupApi {
 
     constructor(
         public http: HttpClient,
-        public httpNative: HTTP,
         public iab: InAppBrowser,
         private platform: Platform,
         private storage: Storage,
@@ -59,20 +57,17 @@ export class MeetupApi {
     }
 
     getUserInfo() {
-        let headers = {
+        const headers = new HttpHeaders({
             'Authorization': `Bearer ' ${this.accessToken}`,
             'Content-Type': 'application/json'
-        };
+        });
 
 
-        return this.httpNative.get(`${this.baseUrl}/2/member/self/`, {}, headers)
-            .then(res => JSON.parse(res.data));
+        return this.http.get(`${this.baseUrl}/2/member/self/`, { headers });
     }
 
     getCurrentUserInfo() {
         let memberV3Url = `${this.baseUrl}/members/self/?access_token=${this.accessToken}`;
-
-        console.log(memberV3Url);
 
         return this.http.get(memberV3Url);
     }
@@ -82,7 +77,7 @@ export class MeetupApi {
         let rsvpV3Url = `${this.baseUrl}/SGF-Web-Devs/events/${eventId}/rsvps?response=${response}&access_token=${this.accessToken}`;
 
         let payload = { response };
-        return this.http.post(rsvpV3Url, payload, { headers: headers })
+        return this.http.post(rsvpV3Url, payload, { headers })
             .map(res => res);
     }
 
@@ -90,7 +85,7 @@ export class MeetupApi {
         let headers = new HttpHeaders();
         let rsvpV3Url = `${this.baseUrl}/SGF-Web-Devs/events/${eventId}/rsvps?&access_token=${this.accessToken}`;
         console.log('checking rsvp for ', eventId);
-        return this.http.get(rsvpV3Url, { headers: headers }).map((res: any) => {
+        return this.http.get(rsvpV3Url, { headers }).map((res: any) => {
             let rsvps = res.json();
             for (let rsvp of rsvps) {
                 if (rsvp.member.id === userId) {
