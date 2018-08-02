@@ -51,6 +51,10 @@ export class MeetupApi {
     }
 
     getAccessToken() {
+        if(this.accessToken) {
+            return Promise.resolve(this.accessToken);
+        }
+
         return this.storage.get(this.tokenStorageKey);
     }
 
