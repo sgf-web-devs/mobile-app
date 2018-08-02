@@ -2,8 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { NavController, Platform } from 'ionic-angular';
 import { CheckInPage } from '../check-in/check-in';
 import { AttendeeProvider } from '../../providers/attendee/attendee';
-import { AuthenticationProvider } from "../../providers/authentication/authentication";
-import { AngularFireDatabase } from 'angularfire2/database';
 import 'rxjs/add/operator/map'
 import { Storage } from '@ionic/storage';
 import { MeetupApi } from '../../providers/authentication/meetup-api.service';
@@ -27,8 +25,6 @@ export class HomePage implements OnInit {
     constructor(
         public navCtrl: NavController,
         private attendeeProvier: AttendeeProvider,
-        public auth: AuthenticationProvider,
-        private db: AngularFireDatabase,
         private storage: Storage,
         public plt: Platform,
         private meetup: MeetupApi,
@@ -37,8 +33,6 @@ export class HomePage implements OnInit {
         this.logs = [];
         this.logging = false;
         this.checkedIn = false;
-        this.items = this.db.list('user').valueChanges();
-
     }
 
     log(message, obj = {}) {

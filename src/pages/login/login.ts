@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Platform, AlertController } from 'ionic-angular';
 
 import { HomePage } from "../home/home";
-import { AuthenticationProvider } from "../../providers/authentication/authentication";
 import { Storage } from '@ionic/storage';
 import { MeetupApi } from "../../providers/authentication/meetup-api.service";
 import { Http } from "@angular/http";
@@ -27,7 +26,6 @@ export class LoginPage  {
     terms = true;
 
     constructor(
-        private auth: AuthenticationProvider,
         public navCtrl: NavController,
         public navParams: NavParams,
         public plt: Platform,
@@ -57,15 +55,6 @@ export class LoginPage  {
         alert.present();
     }
 
-    onLoginChange(user: any) {
-        if (user) {
-            console.log(JSON.stringify(this.auth.user.displayName));
-            this.navCtrl.setRoot(HomePage).then(() => {
-            });
-            //this.navCtrl.push(HomePage);
-        }
-    }
-
     ionViewDidLoad() {
         if (this.plt.is('core') || this.plt.is('mobileweb')) {
             this.isApp = false;
@@ -87,6 +76,8 @@ export class LoginPage  {
     login() {
         this.meetupApi.login().then(success => {
             this.navCtrl.setRoot(HomePage);
+        }).catch(error => {
+            console.log('login page', error)
         })
     }
 }

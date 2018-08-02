@@ -124,70 +124,23 @@ export class MeetupApi {
         });
     }
 
-    browserLogin() {
-        this.iab.create(this.browserUrl, '_blank');
-    }
-
     login() {
-        // return new Promise((resolve, reject) => {
-        //
-        //     let browser = this.iab.create(this.url, '_blank');
-        //
-        //     let listener = browser.on('loadstart').subscribe((event: any) => {
-        //
-        //         if (event.url.indexOf('login') > -1) {
-        //             return;
-        //         }
-        //
-        //         if (event.url.indexOf('https://facebook.com') > -1) {
-        //             return;
-        //         }
-        //
-        //         if (event.url.indexOf('https://www.facebook.com') > -1) {
-        //             return;
-        //         }
-        //
-        //         if (event.url.indexOf('https://m.facebook.com/v2.6') > -1) {
-        //             return;
-        //         }
-        //
-        //         //Ignore the Meetup authorize screen
-        //         if (event.url.indexOf('https://secure.meetup.com/oauth2/authorize') > -1) {
-        //             return;
-        //         }
-        //
-        //         if (event.url.indexOf('http://localhost/#error') > -1) {
-        //             browser.close();
-        //             alert('Could not authenticate');
-        //             reject('Could not authenticate');
-        //         }
-        //
-        //         //Check the redirect uri
-        //         if (event.url.indexOf(this.redirectURI) > -1) {
-        //             listener.unsubscribe();
-        //             browser.close();
-        //             console.log(event.url);
-        //             let token = event.url.split('=')[1].split('&')[0];
-        //             this.accessToken = token;
-        //             resolve(event.url);
-        //             this.getUserInfo();
-        //             //this.navCtrl.setRoot(HomePage);
-        //         } else {
-        //             alert("Could not authenticate");
-        //             reject("Could not authenticate");
-        //         }
-        //     });
-        // });
-
         return new Promise((resolve, reject) => {
-            this.platform.ready().then(() => {
-                this.oauth.logInVia(this.meetupProvider).then((success: any) => {
-                    this.accessToken = success.access_token;
-                    resolve(success);
-                }, error => {
-                    reject(error);
+            try {
+                this.platform.ready().then(() => {
+                    this.oauth.logInVia(this.meetupProvider).then((success: any) => {
+                        this.accessToken = success.access_token;
+                        resolve(success);
+                    })
+                    .catch(error => {
+                        console.log('loginVia error', error);
+                        reject(error);
+                    });
                 });
-            });
+            } catch(err) {
+                console.log(err);
+                reject(err);
+            }
         });
 
 
