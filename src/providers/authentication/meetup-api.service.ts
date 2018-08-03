@@ -35,7 +35,9 @@ export class MeetupApi {
             });
         } else {
             this.oauth = new OauthCordova();
-            this.meetupProvider = new Meetup({ clientId: this.cordovaMeetupClientId });
+            this.meetupProvider = new Meetup({
+                clientId: this.cordovaMeetupClientId,
+            });
 
         }
 
@@ -137,7 +139,10 @@ export class MeetupApi {
                     return;
                 }
 
-                this.oauth.logInVia(this.meetupProvider).then((success: any) => {
+                this.oauth.logInVia(this.meetupProvider, {
+                    clearsessioncache: 'no',
+                    clearcache: 'no'
+                }).then((success: any) => {
                     this.setAccessToken(success.access_token);
                     resolve();
                 })

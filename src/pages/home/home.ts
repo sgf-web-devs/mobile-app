@@ -49,9 +49,9 @@ export class HomePage implements OnInit {
         this.checkCheckIn();
 
 
-        // this.attendeeProvier.getAttendees().subscribe(
-        //     attendees => this.attendees = attendees,
-        // );
+        this.attendeeProvier.getAttendees().subscribe(
+            attendees => this.attendees = attendees,
+        );
 
         this.meetup.getCurrentUserInfo().subscribe(userData => {
             this.currentUser = userData;
