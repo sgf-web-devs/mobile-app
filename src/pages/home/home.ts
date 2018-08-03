@@ -25,7 +25,7 @@ export class HomePage implements OnInit {
 
     constructor(
         public navCtrl: NavController,
-        private attendeeProvier: AttendeeProvider,
+        private attendeeProvider: AttendeeProvider,
         private storage: Storage,
         public plt: Platform,
         private meetup: MeetupApi,
@@ -49,9 +49,10 @@ export class HomePage implements OnInit {
         this.checkCheckIn();
 
 
-        this.attendeeProvier.getAttendees().subscribe(
-            attendees => this.attendees = attendees,
-        );
+        this.attendeeProvider.getAttendees().subscribe(attendees => {
+            this.attendees = attendees;
+            this.attendeesListener();
+        });
 
         this.meetup.getCurrentUserInfo().subscribe(userData => {
             this.currentUser = userData;
@@ -62,6 +63,19 @@ export class HomePage implements OnInit {
         });
     }
 
+    attendeesListener() {
+        this.attendeeProvider.liveAttendees()
+            .subscribe((attendee: any) => {
+                this.attendees = [
+                    {
+                        id: attendee.id,
+                        name: attendee.name,
+                        image: attendee.image,
+                    },
+                    ...this.attendees,
+                ];
+            });
+    }
 
     checkRsvp() {
         if (this.latestMeetup && this.currentUser && !this.checkedIn) {

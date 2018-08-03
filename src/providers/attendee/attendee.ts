@@ -1,5 +1,11 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { of } from 'rxjs/observable/of';
+import { Observable } from 'rxjs/Observable';
+import Pusher from 'pusher-js';
+
+import { environment } from "../../environments/environment";
+
+
 /*
   Generated class for the AttendeeProvider provider.
 
@@ -9,88 +15,28 @@ import { of } from 'rxjs/observable/of';
 @Injectable()
 export class AttendeeProvider {
 
-    private attendees = [{
-        "name": "Andria Fish",
-        "description": "Full Stack Dev",
-        "checkInTime": "1m",
-        "profileImg": "assets/imgs/profile.jpg"
-    }, {
-        "name": "Kimberly Wolseley",
-        "description": "Full Stack Dev",
-        "checkInTime": "1m",
-        "profileImg": "assets/imgs/profile.jpg"
-    }, {
-        "name": "Bettye Hardington",
-        "description": "Full Stack Dev",
-        "checkInTime": "1m",
-        "profileImg": "assets/imgs/profile.jpg"
-    }, {
-        "name": "Vergil MacFadzan",
-        "description": "Back End Dev",
-        "checkInTime": "1m",
-        "profileImg": "assets/imgs/profile.jpg"
-    }, {
-        "name": "Sauncho Kremer",
-        "description": "Full Stack Dev",
-        "checkInTime": "1m",
-        "profileImg": "assets/imgs/profile.jpg"
-    }, {
-        "name": "Bartholomew Worster",
-        "description": "Full Stack Dev",
-        "checkInTime": "1m",
-        "profileImg": "assets/imgs/profile.jpg"
-    }, {
-        "name": "Hermann Byass",
-        "description": "Front End Dev",
-        "checkInTime": "1m",
-        "profileImg": "assets/imgs/profile.jpg"
-    }, {
-        "name": "Bernie Moncey",
-        "description": "Front End Dev",
-        "checkInTime": "1m",
-        "profileImg": "assets/imgs/profile.jpg"
-    }, {
-        "name": "Skippy Loudian",
-        "description": "Front End Dev",
-        "checkInTime": "1m",
-        "profileImg": "assets/imgs/profile.jpg"
-    }, {
-        "name": "Mufi Sallenger",
-        "description": "Full Stack Dev",
-        "checkInTime": "1m",
-        "profileImg": "assets/imgs/profile.jpg"
-    }, {
-        "name": "Hank Enriques",
-        "description": "Front End Dev",
-        "checkInTime": "1m",
-        "profileImg": "assets/imgs/profile.jpg"
-    }, {
-        "name": "Maressa Doudney",
-        "description": "Full Stack Dev",
-        "checkInTime": "1m",
-        "profileImg": "assets/imgs/profile.jpg"
-    }, {
-        "name": "Meier Otley",
-        "description": "Back End Dev",
-        "checkInTime": "1m",
-        "profileImg": "assets/imgs/profile.jpg"
-    }, {
-        "name": "Adria Sotworth",
-        "description": "Front End Dev",
-        "checkInTime": "1m",
-        "profileImg": "assets/imgs/profile.jpg"
-    }, {
-        "name": "Thurstan Gerrans",
-        "description": "Back End Dev",
-        "checkInTime": "1m",
-        "profileImg": "assets/imgs/profile.jpg"
-    }];
+    private baseUrl = environment.webDevs.baseUrl;
 
-    constructor() {
+    constructor(
+        public http: HttpClient
+    ) {
     }
 
-    getAttendees() {
-        return of(this.attendees);
+    public getAttendees() {
+        return this.http.get(`${this.baseUrl}/api/attendees`);
+    }
+
+    public liveAttendees(): Observable<any> {
+        const pusher = new Pusher(environment.pusher.appKey, {
+            cluster: environment.pusher.cluster,
+            encrypted: true
+        });
+
+        const channel = pusher.subscribe('attendees');
+
+        return Observable.create(observer => {
+            channel.bind('new-checkin', (attendee: any) => observer.next(attendee));
+        });
     }
 
 }

@@ -10,5 +10,8 @@ export const environment = {
     meetup: {
         browserClientId: '',
         cordovaClientId: '',
+    },
+    webDevs: {
+        baseUrl: 'https://admin.sgfwebdevs.com'
     }
 };

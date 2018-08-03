@@ -1,15 +1,19 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 
+import { environment } from "../../environments/environment";
+
 @Injectable()
 export class WebDevsApi {
+
+    private baseUrl =  environment.webDevs.baseUrl;
 
     constructor(public http: HttpClient) {
 
     }
 
     checkin(userData) {
-        let url = 'https://admin.sgfwebdevs.com/api/checkin';
+        let url = `${this.baseUrl}/api/checkin`;
 
         return new Promise(resolve => {
             let checkinData = {
