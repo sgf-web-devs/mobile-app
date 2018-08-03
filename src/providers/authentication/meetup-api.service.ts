@@ -8,14 +8,16 @@ import { Storage } from '@ionic/storage';
 import { OauthBrowser } from "ng2-cordova-oauth/platform/browser";
 import { OauthCordova } from "ng2-cordova-oauth/platform/cordova";
 
+import { environment } from "../../environments/environment";
+
 
 @Injectable()
 export class MeetupApi {
     private accessToken: any;
     private baseUrl = 'https://api.meetup.com';
     private tokenStorageKey = 'meetup-access-token';
-    private cordovaMeetupClientId = 'n91gkbjmld10pjvn6eqctu0llb';
-    private browserMeetupClientId = 'j3fc3fgc175tt820cr4j2jmhlq';
+    private cordovaMeetupClientId = environment.meetup.cordovaClientId;
+    private browserMeetupClientId = environment.meetup.browserClientId;
     private oauth: OauthCordova | OauthBrowser;
     private meetupProvider: Meetup;
 

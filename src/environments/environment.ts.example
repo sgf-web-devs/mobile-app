@@ -1,0 +1,14 @@
+export const environment = {
+    oneSignal: {
+        restApiKey: '',
+        appId: ''
+    },
+    pusher: {
+        appKey: '',
+        cluster: '',
+    },
+    meetup: {
+        browserClientId: '',
+        cordovaClientId: '',
+    }
+};

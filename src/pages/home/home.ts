@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { NavController, Platform } from 'ionic-angular';
-import { CheckInPage } from '../check-in/check-in';
-import { AttendeeProvider } from '../../providers/attendee/attendee';
-import 'rxjs/add/operator/map'
 import { Storage } from '@ionic/storage';
+import 'rxjs/add/operator/map'
+import { environment } from "../../environments/environment";
+import { AttendeeProvider } from '../../providers/attendee/attendee';
+import { CheckInPage } from '../check-in/check-in';
 import { MeetupApi } from '../../providers/authentication/meetup-api.service';
 import { WebDevsApi } from '../../providers/webdevs/web-devs-api.service';
 
@@ -217,7 +218,7 @@ export class HomePage implements OnInit {
 
         if (this.plt.is('android')) {
             window["plugins"].OneSignal
-                .startInit("0b60a144-1ecf-4903-8c16-76bec9905e8f", "673684652707")
+                .startInit(environment.oneSignal.restApiKey, environment.oneSignal.appId)
                 .handleNotificationOpened(notificationOpenedCallback)
                 .endInit();
 
@@ -226,7 +227,7 @@ export class HomePage implements OnInit {
 
         if (this.plt.is('ios')) {
             window["plugins"].OneSignal
-                .startInit("0b60a144-1ecf-4903-8c16-76bec9905e8f")
+                .startInit(environment.oneSignal.restApiKey)
                 .handleNotificationOpened(notificationOpenedCallback)
                 .endInit();
 
