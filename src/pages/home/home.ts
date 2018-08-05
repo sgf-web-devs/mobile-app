@@ -20,8 +20,8 @@ export class HomePage implements OnInit {
     checkedIn: boolean;
     currentUser: any;
     rsvpd: boolean;
-    logs: string[];
-    logging: boolean;
+    showMore: boolean;
+    description: string;
 
     constructor(
         public navCtrl: NavController,
@@ -31,23 +31,13 @@ export class HomePage implements OnInit {
         private meetup: MeetupApi,
         private webdevs: WebDevsApi
     ) {
-        this.logs = [];
-        this.logging = false;
         this.checkedIn = false;
     }
 
-    log(message, obj = {}) {
-        if (this.logging) {
-            this.logs.push(`${message}: ${JSON.stringify(obj)}`);
-        }
-
-        console.log(message, obj);
-    }
 
     ngOnInit() {
         this.getLatestMeetup();
         this.checkCheckIn();
-
 
         this.attendeeProvider.getAttendees().subscribe(attendees => {
             this.attendees = attendees;
@@ -59,8 +49,9 @@ export class HomePage implements OnInit {
             this.initPushNotifications();
             //this.checkRsvp();
         }, err => {
-            this.log('error getting User info', err);
+            console.log('error getting User info', err);
         });
+
     }
 
     attendeesListener() {
@@ -79,14 +70,14 @@ export class HomePage implements OnInit {
 
     checkRsvp() {
         if (this.latestMeetup && this.currentUser && !this.checkedIn) {
-            this.log('checking meetup rsvp');
+            console.log('checking meetup rsvp');
             this.meetup.checkRSVP(this.latestMeetup.id, this.currentUser.id).subscribe(
                 rsvpd => {
                     this.rsvpd = rsvpd;
-                    this.log('rsvp:', rsvpd);
+                    console.log('rsvp:', rsvpd);
                 },
                 err => {
-                    this.log('error determining rsvp', err);
+                    console.log('error determining rsvp', err);
                 }
             )
         }
@@ -95,11 +86,12 @@ export class HomePage implements OnInit {
     getLatestMeetup() {
         this.meetup.getLatestEvent().then(
             latestEvent => {
-                this.log('latestEvent: ', latestEvent);
+                console.log('latestEvent: ', latestEvent);
                 this.latestMeetup = latestEvent;
+                this.computeDescription(this.latestMeetup.description);
             },
             err => {
-                this.log('error getting latest meetup info', err);
+                console.log('error getting latest meetup info', err);
             }
         );
     }
@@ -107,7 +99,7 @@ export class HomePage implements OnInit {
     checkIn() {
 
         this.webdevs.checkin(this.currentUser).then(goodCheckIn => {
-            this.log('check response:', goodCheckIn);
+            console.log('check response:', goodCheckIn);
             if (goodCheckIn) {
                 this.checkedIn = true;
                 this.cacheCheckin();
@@ -115,16 +107,30 @@ export class HomePage implements OnInit {
         });
     }
 
-    // uggggh. whatever - Myke
-    trimDescription(description) {
-        let trimSpot = description.indexOf('<p>Pizza');
+    toggleDescription() {
+        this.showMore = !this.showMore;
+        this.computeDescription(this.latestMeetup.description);
+    }
 
-        if (trimSpot) {
-            return description.substring(0, trimSpot);
+    computeDescription(text) {
+        if(!this.showMore) {
+            const trimmed = this.htmlToPlaintext(text)
+                .split(' ')
+                .splice(0, 100)
+                .join(' ');
+
+            this.description = `<p>${trimmed}</p>`;
+            return;
         }
 
-        return description;
+        this.description = text;
+        return;
     }
+
+    htmlToPlaintext(text) {
+        return text ? String(text).replace(/<[^>]+>/gm, '') : '';
+    }
+
 
     // Probably just need to pull moment in at some point for other features, too - Myke
     formatDate(date) {
@@ -154,7 +160,7 @@ export class HomePage implements OnInit {
                 this.rsvpd = true;
             },
             err => {
-                this.log('error rsvping', err);
+                console.log('error rsvping', err);
             }
         );
     }
@@ -165,7 +171,7 @@ export class HomePage implements OnInit {
                 this.rsvpd = false;
             },
             err => {
-                this.log('error cancelling rsvp', err);
+                console.log('error cancelling rsvp', err);
             }
         );
     }

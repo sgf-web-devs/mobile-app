@@ -28,27 +28,18 @@
                 <ion-row>
                     <ion-col col-12>
                         <div text-wrap [ngClass]="showMore ? 'description' : 'description minimized'">
-                            <div [innerHTML]="trimDescription(latestMeetup.description)"></div>
+                            <div [innerHTML]="description"></div>
                         </div>
                     </ion-col>
                 </ion-row>
             </ion-grid>
         </ion-item>
-        <ion-item color="primary-light" *ngIf="!showMore" (click)="toggleDescription()">
+        <ion-item color="primary-light" (click)="toggleDescription()">
             <ion-grid>                    
                 <ion-row text-right>
                     <ion-col col-12>
-                        <div>...Show More</div>
-                    </ion-col>
-                </ion-row>
-            </ion-grid>
-        </ion-item>
-        <ion-item *ngIf="logging">
-            <ion-grid>
-                <ion-row>
-                    <ion-col col-12>
-                        Logs:
-                        <p *ngFor="let log of logs">{{log}}</p>
+                        <div *ngIf="!showMore">...Show More</div>
+                        <div *ngIf="showMore">...Show Less</div>
                     </ion-col>
                 </ion-row>
             </ion-grid>
