@@ -1,12 +1,11 @@
 <ion-item>
   <ion-avatar item-start>
-    <img src="{{ attendee.profileImg }}">
+    <img [src]="attendee.image">
   </ion-avatar>
   <ion-grid>
     <ion-row>
       <ion-col col-10>
         <h2>{{ attendee.name }}</h2>
-        <!--<p>{{ attendee.description }}</p>-->
       </ion-col>
       <ion-col col-2>
         <p>{{ attendee.checkInTime }}</p>
