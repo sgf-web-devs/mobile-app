@@ -1,13 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { NavController, Platform } from 'ionic-angular';
-import { CheckInPage } from '../check-in/check-in';
-import { AttendeeProvider } from '../../providers/attendee/attendee';
-import { AuthenticationProvider } from "../../providers/authentication/authentication";
-import { AngularFireDatabase } from 'angularfire2/database';
-import 'rxjs/add/operator/map'
 import { Storage } from '@ionic/storage';
-import { Meetup } from '../../providers/authentication/meetup';
-import { WebDevs } from '../../providers/webdevs/webdevs';
+import 'rxjs/add/operator/map'
+import { environment } from "../../environments/environment";
+import { AttendeeProvider } from '../../providers/attendee/attendee';
+import { CheckInPage } from '../check-in/check-in';
+import { MeetupApi } from '../../providers/authentication/meetup-api.service';
+import { WebDevsApi } from '../../providers/webdevs/web-devs-api.service';
 
 @Component({
     selector: 'page-home',
@@ -21,83 +20,78 @@ export class HomePage implements OnInit {
     checkedIn: boolean;
     currentUser: any;
     rsvpd: boolean;
-    logs: string[];
-    logging: boolean;
+    showMore: boolean;
+    description: string;
 
     constructor(
         public navCtrl: NavController,
-        private attendeeProvier: AttendeeProvider,
-        public auth: AuthenticationProvider,
-        private db: AngularFireDatabase,
+        private attendeeProvider: AttendeeProvider,
         private storage: Storage,
         public plt: Platform,
-        private meetup: Meetup,
-        private webdevs: WebDevs
+        private meetup: MeetupApi,
+        private webdevs: WebDevsApi
     ) {
-        this.logs = [];
-        this.logging = false;
         this.checkedIn = false;
-        this.items = this.db.list('user').valueChanges();
-
     }
 
-    log(message, obj = {}) {
-        if (this.logging) {
-            this.logs.push(`${message}: ${JSON.stringify(obj)}`);
-        }
-
-        console.log(message, obj);
-    }
 
     ngOnInit() {
         this.getLatestMeetup();
         this.checkCheckIn();
 
+        this.attendeeProvider.getAttendees().subscribe(attendees => {
+            this.attendees = attendees;
+            this.attendeesListener();
+        });
 
-        this.attendeeProvier.getAttendees().subscribe(
-            attendees => this.attendees = attendees,
-        );
-        this.meetup.getCurrentUserInfo().then(
-            userData => {
-                console.log(userData);
-                this.currentUser = userData;
-                this.log('current user: ', this.currentUser);
-                this.initPushNotifications();
-                //this.checkRsvp();
-            }, err => {
-                this.log('error getting User info', err);
+        this.meetup.getCurrentUserInfo().subscribe(userData => {
+            this.currentUser = userData;
+            this.initPushNotifications();
+            //this.checkRsvp();
+        }, err => {
+            console.log('error getting User info', err);
+        });
+
+    }
+
+    attendeesListener() {
+        this.attendeeProvider.liveAttendees()
+            .subscribe((attendee: any) => {
+                this.attendees = [
+                    {
+                        id: attendee.id,
+                        name: attendee.name,
+                        image: attendee.image,
+                    },
+                    ...this.attendees,
+                ];
             });
     }
 
-
     checkRsvp() {
         if (this.latestMeetup && this.currentUser && !this.checkedIn) {
-            this.log('checking meetup rsvp');
+            console.log('checking meetup rsvp');
             this.meetup.checkRSVP(this.latestMeetup.id, this.currentUser.id).subscribe(
                 rsvpd => {
                     this.rsvpd = rsvpd;
-                    this.log('rsvp:', rsvpd);
+                    console.log('rsvp:', rsvpd);
                 },
                 err => {
-                    this.log('error determining rsvp', err);
+                    console.log('error determining rsvp', err);
                 }
             )
         }
     }
 
     getLatestMeetup() {
-
-        //let hey = this.meetup.getLatestEvent();
-        //console.log(hey);
-        //this.latestMeetup = hey;
         this.meetup.getLatestEvent().then(
             latestEvent => {
-                this.log('latestEvent: ', latestEvent);
+                console.log('latestEvent: ', latestEvent);
                 this.latestMeetup = latestEvent;
-                //this.checkRsvp();
+                this.computeDescription(this.latestMeetup.description);
             },
             err => {
-                this.log('error getting latest meetup info', err);
+                console.log('error getting latest meetup info', err);
             }
         );
     }
@@ -105,7 +99,7 @@ export class HomePage implements OnInit {
     checkIn() {
 
         this.webdevs.checkin(this.currentUser).then(goodCheckIn => {
-            this.log('check response:', goodCheckIn);
+            console.log('check response:', goodCheckIn);
             if (goodCheckIn) {
                 this.checkedIn = true;
                 this.cacheCheckin();
@@ -113,16 +107,30 @@ export class HomePage implements OnInit {
         });
     }
 
-    // uggggh. whatever - Myke
-    trimDescription(description) {
-        let trimSpot = description.indexOf('<p>Pizza');
+    toggleDescription() {
+        this.showMore = !this.showMore;
+        this.computeDescription(this.latestMeetup.description);
+    }
 
-        if (trimSpot) {
-            return description.substring(0, trimSpot);
+    computeDescription(text) {
+        if(!this.showMore) {
+            const trimmed = this.htmlToPlaintext(text)
+                .split(' ')
+                .splice(0, 100)
+                .join(' ');
+
+            this.description = `<p>${trimmed}</p>`;
+            return;
         }
 
-        return description;
+        this.description = text;
+        return;
     }
+
+    htmlToPlaintext(text) {
+        return text ? String(text).replace(/<[^>]+>/gm, '') : '';
+    }
+
 
     // Probably just need to pull moment in at some point for other features, too - Myke
     formatDate(date) {
@@ -152,7 +160,7 @@ export class HomePage implements OnInit {
                 this.rsvpd = true;
             },
             err => {
-                this.log('error rsvping', err);
+                console.log('error rsvping', err);
             }
         );
     }
@@ -163,7 +171,7 @@ export class HomePage implements OnInit {
                 this.rsvpd = false;
             },
             err => {
-                this.log('error cancelling rsvp', err);
+                console.log('error cancelling rsvp', err);
             }
         );
     }
@@ -230,7 +238,7 @@ export class HomePage implements OnInit {
 
         if (this.plt.is('android')) {
             window["plugins"].OneSignal
-                .startInit("0b60a144-1ecf-4903-8c16-76bec9905e8f", "673684652707")
+                .startInit(environment.oneSignal.restApiKey, environment.oneSignal.appId)
                 .handleNotificationOpened(notificationOpenedCallback)
                 .endInit();
 
@@ -239,7 +247,7 @@ export class HomePage implements OnInit {
 
         if (this.plt.is('ios')) {
             window["plugins"].OneSignal
-                .startInit("0b60a144-1ecf-4903-8c16-76bec9905e8f")
+                .startInit(environment.oneSignal.restApiKey)
                 .handleNotificationOpened(notificationOpenedCallback)
                 .endInit();
 
